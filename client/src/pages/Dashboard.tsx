@@ -1,49 +1,31 @@
 import { Header } from "../components/Header";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { DashboardCartItem } from "../components/DashboardCartItem";
 import { DashboardCartAdd } from "../components/DashboardCartAdd";
+import { Sidebar } from "../components/SideBar";
+import { SidebarMobile } from "../components/SidebarMobile";
+import { useState } from "react";
 
 export const Dashboard = () => {
+	const [openSidebar, setOpenSidebar] = useState(false);
+	const toggleSidebarMobile = (): void => {
+		setOpenSidebar(!openSidebar);
+	};
 	return (
 		<div className="h-screen w-screen bg-gray-100 flex flex-col">
-			<Header />
+			<Header openSidebarMobile={toggleSidebarMobile}></Header>
 			{/* Body chia 2 cột */}
 			<div className="flex flex-1 overflow-hidden">
 				{/* Sidebar trái */}
-				<div className="w-[240px] border-r-2 border-gray-300 bg-gray-100 overflow-y-auto h-full">
-					<div className="flex flex-col gap-3 border-b-2 px-4 py-10 border-b-gray-300">
-						<div className="text-[12px]">YOUR WORKSPACES</div>
-						<div className="flex gap-2 items-center cursor-pointer">
-							<FormatListBulletedIcon
-								className="text-blue-500"
-								fontSize="small"
-							/>
-							<div className="text-blue-500 text-[14px]">Boards</div>
-						</div>
-						<div className="flex gap-2 items-center cursor-pointer">
-							<StarBorderIcon className="text-blue-500" fontSize="small" />
-							<div className="text-blue-500 text-[14px]">Starred Boards</div>
-						</div>
-						<div className="flex gap-2 items-center cursor-pointer">
-							<ClearOutlinedIcon className="text-blue-500" fontSize="small" />
-							<div className="text-blue-500 text-[14px]">Closed Boards</div>
-						</div>
-					</div>
-					<div className="flex flex-col gap-3 p-4">
-						<div className="flex gap-2 items-center cursor-pointer">
-							<SettingsIcon className="text-blue-500" fontSize="small" />
-							<div className="text-blue-500 text-[14px]">Setting</div>
-						</div>
-						<div className="flex gap-2 items-center cursor-pointer">
-							<ExitToAppIcon className="text-blue-500" fontSize="small" />
-							<div className="text-blue-500 text-[14px]">Sign Out</div>
-						</div>
-					</div>
-				</div>
+				<Sidebar></Sidebar>
+
+				{/*Sidebar cho mobile*/}
+				{openSidebar && (
+					<SidebarMobile
+						closeSidebarMobile={toggleSidebarMobile}
+					></SidebarMobile>
+				)}
 
 				{/* Content chính */}
 				<div className="flex-1 p-4 overflow-y-auto bg-white h-full">
@@ -67,7 +49,7 @@ export const Dashboard = () => {
 					</div>
 
 					{/* Workspace boards */}
-					<div className="p-2 grid grid-cols-4 gap-3 mt-3">
+					<div className="p-2 grid grid-cols-4 gap-3 mt-3 max-sm:grid-cols-2">
 						<DashboardCartItem />
 						<DashboardCartItem />
 						<DashboardCartAdd></DashboardCartAdd>
@@ -79,7 +61,7 @@ export const Dashboard = () => {
 							<StarBorderIcon fontSize="large" />
 							<div className="text-[28px] text-[#212529]">Starred Boards</div>
 						</div>
-						<div className="grid grid-cols-4 gap-3 mt-5">
+						<div className="grid grid-cols-4 gap-3 mt-5 max-sm:grid-cols-2">
 							{Array.from({ length: 10 }).map((_, i) => (
 								<DashboardCartItem key={i} />
 							))}
