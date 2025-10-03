@@ -17,6 +17,7 @@ export const LoginPage = () => {
 	const onSubmit = (): void => {
 		if (!validateLogin(inputState.email, inputState.password)) {
 			toast.error("Địa chỉ email hoặc mật khẩu không chính xác");
+			return;
 		}
 		navigate("/dashboard");
 	};

@@ -3,9 +3,10 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { DashboardCartItem } from "../components/DashboardCartItem";
 import { DashboardCartAdd } from "../components/DashboardCartAdd";
-import { Sidebar } from "../components/SideBar";
+import { Sidebar } from "../components/Sidebar";
 import { SidebarMobile } from "../components/SidebarMobile";
 import { useState } from "react";
+import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
 
 export const Dashboard = () => {
 	const [openSidebar, setOpenSidebar] = useState(false);
@@ -13,7 +14,8 @@ export const Dashboard = () => {
 		setOpenSidebar(!openSidebar);
 	};
 	return (
-		<div className="h-screen w-screen bg-gray-100 flex flex-col">
+		<div className="relative h-screen w-screen bg-gray-100 flex flex-col">
+			<ModalAddEditBoard></ModalAddEditBoard>
 			<Header openSidebarMobile={toggleSidebarMobile}></Header>
 			{/* Body chia 2 cột */}
 			<div className="flex flex-1 overflow-hidden">
