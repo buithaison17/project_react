@@ -1,14 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/trello-logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { validateLogin } from "../utils/validate";
+import { useDispatch } from "react-redux";
+import { fetchData, loginUser } from "../store/usersReducer";
+import type { AppDispatch } from "../store/store";
 
 export const LoginPage = () => {
+	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 	const [inputState, setInputState] = useState({
 		email: "",
 		password: "",
+	});
+	useEffect(() => {
+		dispatch(fetchData());
 	});
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const { name, value } = e.target;
@@ -19,6 +26,11 @@ export const LoginPage = () => {
 			toast.error("Địa chỉ email hoặc mật khẩu không chính xác");
 			return;
 		}
+		const user = {
+			email: inputState.email,
+			password: inputState.password,
+		};
+		dispatch(loginUser(user));
 		navigate("/dashboard");
 	};
 	return (

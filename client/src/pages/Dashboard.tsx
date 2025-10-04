@@ -5,17 +5,25 @@ import { DashboardCartItem } from "../components/DashboardCartItem";
 import { DashboardCartAdd } from "../components/DashboardCartAdd";
 import { Sidebar } from "../components/Sidebar";
 import { SidebarMobile } from "../components/SidebarMobile";
-import { useState } from "react";
-import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+// import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
+// import { ModalDelete } from "../components/ModalDelete";
 
 export const Dashboard = () => {
+	const { currentUser } = useSelector((state: RootState) => state.usersReducer);
+	useEffect(() => {
+		console.log(currentUser);
+	});
 	const [openSidebar, setOpenSidebar] = useState(false);
 	const toggleSidebarMobile = (): void => {
 		setOpenSidebar(!openSidebar);
 	};
 	return (
 		<div className="relative h-screen w-screen bg-gray-100 flex flex-col">
-			<ModalAddEditBoard></ModalAddEditBoard>
+			{/* <ModalAddEditBoard></ModalAddEditBoard> */}
+			{/* <ModalDelete></ModalDelete> */}
 			<Header openSidebarMobile={toggleSidebarMobile}></Header>
 			{/* Body chia 2 cột */}
 			<div className="flex flex-1 overflow-hidden">

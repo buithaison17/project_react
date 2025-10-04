@@ -120,13 +120,14 @@ export const ModalAddEditBoard = () => {
 					<div className="grid grid-cols-6 gap-1">
 						{colorRow.map((item, index) => (
 							<div
-								onClick={() => onChooseColor(index)}
 								key={index}
-								className={`bg-gradient-to-b from-[${item.from}] to-[${item.to}] h-[40px] rounded-md flex justify-center items-center`}
+								onClick={() => onChooseColor(index)}
+								style={{
+									backgroundImage: `linear-gradient(to bottom, ${item.from}, ${item.to})`,
+								}}
+								className={`h-[40px] rounded-md flex justify-center items-center`}
 							>
-								{item.isChoose && (
-									<CheckCircleIcon className="text-white"></CheckCircleIcon>
-								)}
+								{item.isChoose && <CheckCircleIcon className="text-white" />}
 							</div>
 						))}
 					</div>

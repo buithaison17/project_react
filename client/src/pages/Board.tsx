@@ -2,9 +2,9 @@ import { Header } from "../components/Header";
 import { SidebarBoard } from "../components/SidebarBoard";
 import Star from "../assets/images/star.png";
 import BoardIcon from "../assets/images/board-icon.png";
-
 import TableBoardIcon from "../assets/images/table-board.png";
 import { BoardCard } from "../components/BoardCard";
+import CloseTable from "../assets/images/close-table.png";
 
 export const Board = () => {
 	return (
@@ -36,6 +36,14 @@ export const Board = () => {
 									alt=""
 								/>
 								<div className="text-[14px]">Table</div>
+							</div>
+							<div className="flex gap-2 items-center px-2 py-1 rounded-md cursor-pointer">
+								<img
+									src={CloseTable}
+									className="w-[16px] h-[16px]"
+									alt=""
+								/>
+								<div className="text-[14px]">Close this table</div>
 							</div>
 						</div>
 					</div>

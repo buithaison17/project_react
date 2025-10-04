@@ -1,17 +1,25 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+	createAsyncThunk,
+	createSlice,
+	type PayloadAction,
+} from "@reduxjs/toolkit";
 import type { User } from "../utils/type";
 import axios from "axios";
 
 interface StateType {
 	users: User[];
+	currentUser: User | null;
 }
 
 const initialState: StateType = {
 	users: [],
+	currentUser: localStorage.getItem("currentUser")
+		? JSON.parse(localStorage.getItem("currentUser")!)
+		: null,
 };
 
-const fetchData = createAsyncThunk<User[]>("users/set", async () => {
-	const response = await axios.get("");
+export const fetchData = createAsyncThunk<User[]>("users/set", async () => {
+	const response = await axios.get("http://localhost:8080/users");
 	return response.data;
 });
 
@@ -26,7 +34,25 @@ export const addUser = createAsyncThunk<User, User>(
 const usersSlice = createSlice({
 	name: "usersSlice",
 	initialState,
-	reducers: {},
+	reducers: {
+		loginUser: (
+			state,
+			action: PayloadAction<{ email: string; password: string }>
+		): void => {
+			const { email, password } = action.payload;
+			const user = state.users.find(
+				(user) => user.email === email && user.password === password
+			);
+			if (user) {
+				state.currentUser = user;
+				localStorage.setItem("currentUser", JSON.stringify(user));
+			} else state.currentUser = null;
+		},
+		logoutUser: (state): void => {
+			state.currentUser = null;
+			localStorage.removeItem("currentUser");
+		},
+	},
 	extraReducers(builder) {
 		builder.addCase(fetchData.fulfilled, (state, action) => {
 			state.users = action.payload;
@@ -37,4 +63,5 @@ const usersSlice = createSlice({
 	},
 });
 
+export const { loginUser } = usersSlice.actions;
 export default usersSlice.reducer;
