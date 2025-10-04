@@ -5,6 +5,10 @@ import BoardIcon from "../assets/images/board-icon.png";
 import TableBoardIcon from "../assets/images/table-board.png";
 import { BoardCard } from "../components/BoardCard";
 import CloseTable from "../assets/images/close-table.png";
+import { ModalTaskDetail } from "../components/ModalTaskDetail";
+import { ModalLabel } from "../components/ModalLabel";
+import { ModalCreateLabel } from "../components/ModalCreateLabel";
+import { ModalMoveCard } from "../components/ModalMoveCard";
 
 export const Board = () => {
 	return (
@@ -38,11 +42,7 @@ export const Board = () => {
 								<div className="text-[14px]">Table</div>
 							</div>
 							<div className="flex gap-2 items-center px-2 py-1 rounded-md cursor-pointer">
-								<img
-									src={CloseTable}
-									className="w-[16px] h-[16px]"
-									alt=""
-								/>
+								<img src={CloseTable} className="w-[16px] h-[16px]" alt="" />
 								<div className="text-[14px]">Close this table</div>
 							</div>
 						</div>
@@ -55,6 +55,10 @@ export const Board = () => {
 					</div>
 				</div>
 			</div>
+			{/* <ModalTaskDetail></ModalTaskDetail> */}
+			{/* <ModalLabel></ModalLabel> */}
+			{/* <ModalCreateLabel></ModalCreateLabel> */}
+			{/* <ModalMoveCard></ModalMoveCard> */}
 		</div>
 	);
 };
