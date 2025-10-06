@@ -9,13 +9,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
-import { fetchData } from "../store/usersReducer";
+import { fetchData, logoutUser } from "../store/usersReducer";
 import type { Board } from "../utils/type";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
 	const { currentUserId, users } = useSelector(
 		(state: RootState) => state.usersReducer
 	);
+	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 	useEffect(() => {
 		dispatch(fetchData());
@@ -23,6 +25,7 @@ export const Dashboard = () => {
 	const currentUser = users.find((user) => user.id === currentUserId);
 	const [openSidebar, setOpenSidebar] = useState(false);
 	const [isEdit, setIsEdit] = useState<Board | null>(null);
+	const [openModalAdd, setOpenModalAdd] = useState(false);
 	const toggleSidebarMobile = (): void => {
 		setOpenSidebar(!openSidebar);
 	};
@@ -37,7 +40,10 @@ export const Dashboard = () => {
 		setIsEdit(board);
 		handleOpenModalAdd();
 	};
-	const [openModalAdd, setOpenModalAdd] = useState(false);
+	const handleLogout = (): void => {
+		dispatch(logoutUser());
+		navigate("/login");
+	};
 	return (
 		<div className="relative h-screen w-screen bg-gray-100 flex flex-col">
 			{openModalAdd && (
@@ -51,7 +57,7 @@ export const Dashboard = () => {
 			{/* Body chia 2 cột */}
 			<div className="flex flex-1 overflow-hidden">
 				{/* Sidebar trái */}
-				<Sidebar></Sidebar>
+				<Sidebar handleLogout={handleLogout}></Sidebar>
 
 				{/*Sidebar cho mobile*/}
 				{openSidebar && (

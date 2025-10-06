@@ -131,7 +131,6 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 				boards: [...currentUser!.boards, board],
 			};
 			dispatch(addBoard(newCurrentUser!));
-			toast.success("Thêm thành công");
 		} else {
 			const boardUpdates: Board = {
 				...isEdit,
@@ -146,7 +145,6 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 					),
 				};
 				dispatch(addBoard(currentUserUpdates));
-				toast.success("Sửa thành công");
 			}
 		}
 		handleClose();
@@ -163,7 +161,7 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 				pauseOnFocusLoss
 				draggable
 				pauseOnHover
-				theme="light"
+				theme="colored"
 				transition={Bounce}
 			/>
 			{/* Overlay */}
