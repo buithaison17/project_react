@@ -19,7 +19,7 @@ export const RegisterPage = () => {
 	});
 	useEffect(() => {
 		dispatch(fetchData());
-	});
+	}, [dispatch]);
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const { name, value } = e.target;
 		setInputState({ ...inputState, [name]: value });	

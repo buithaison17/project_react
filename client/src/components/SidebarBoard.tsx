@@ -3,8 +3,22 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import { SidebarBoardItem } from "./SidebarBoardItem";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/store";
+import { useEffect } from "react";
+import { fetchData } from "../store/usersReducer";
+import { useNavigate } from "react-router-dom";
 
 export const SidebarBoard = () => {
+	const { users, currentUserId } = useSelector(
+		(state: RootState) => state.usersReducer
+	);
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
+	useEffect(() => {
+		dispatch(fetchData());
+	}, [dispatch]);
+	const currentUser = users.find((u) => u.id === currentUserId);
 	return (
 		<div className="w-[240px] bg-[#F8F9FA]">
 			<div className="flex flex-col gap-3 px-3 py-6 border-b border-b-gray-300">
@@ -28,8 +42,13 @@ export const SidebarBoard = () => {
 					<AddIcon className="cursor-pointer" fontSize="small"></AddIcon>
 				</div>
 				<div className="flex flex-col gap-3">
-					<SidebarBoardItem></SidebarBoardItem>
-					<SidebarBoardItem></SidebarBoardItem>
+					{currentUser?.boards.map((board) => (
+						<SidebarBoardItem
+							key={board.id}
+							board={board}
+							onClick={() => navigate(`/board/${board.id}`)}
+						></SidebarBoardItem>
+					))}
 				</div>
 			</div>
 		</div>

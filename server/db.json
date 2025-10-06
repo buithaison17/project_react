@@ -8,29 +8,33 @@
       "created_at": "2025-10-6 7:48",
       "boards": [
         {
-          "id": "662497",
-          "title": "Sơn Bùi 12",
+          "id": "170997",
+          "title": "Sơn Bùi",
           "description": "",
-          "created_at": "2025-10-6 9:5",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
-          "is_starred": false,
-          "list": []
-        },
-        {
-          "id": "99531",
-          "title": "Sơn Bùi 21",
-          "description": "",
-          "created_at": "2025-10-6 9:6",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378938/tv6klliekufan47mzmdy.jpg",
-          "is_starred": false,
-          "list": []
-        },
-        {
-          "id": "296246",
-          "title": "12",
-          "description": "",
-          "created_at": "2025-10-6 9:26",
+          "created_at": "2025-10-6 15:21",
           "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378225/m2zskmrawqpvxnvsuetr.jpg",
+          "is_starred": false,
+          "list": [
+            {
+              "id": "list-1",
+              "title": "ToDo",
+              "created_at": "2025-10-06T08:00:00Z",
+              "tasks": []
+            },
+            {
+              "id": "list-2",
+              "title": "In Progress",
+              "created_at": "2025-10-06T09:00:00Z",
+              "tasks": []
+            }
+          ]
+        },
+        {
+          "id": "685946",
+          "title": "Chào cả nhà",
+          "description": "",
+          "created_at": "2025-10-6 15:53",
+          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
           "is_starred": false,
           "list": []
         }

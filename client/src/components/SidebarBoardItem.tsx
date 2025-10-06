@@ -1,8 +1,20 @@
-export const SidebarBoardItem = () => {
+import type { Board } from "../utils/type";
+
+interface PropsType {
+	board: Board;
+	onClick: () => void;
+}
+
+export const SidebarBoardItem = ({ board, onClick }: PropsType) => {
 	return (
-		<div className="flex items-center gap-2 cursor-pointer">
-			<div className="w-[24px] h-[20px] bg-black"></div>
-			<div className="text-[14px] text-[#172B4D] hover:underline">My Trello board</div>
+		<div onClick={onClick} className="flex items-center gap-2 cursor-pointer">
+			<img
+				src={board.backdrop}
+				className="w-[24px] h-[20px] object-cover object-center"
+			></img>
+			<div className="text-[14px] text-[#172B4D] hover:underline">
+				{board.title}
+			</div>
 		</div>
 	);
 };

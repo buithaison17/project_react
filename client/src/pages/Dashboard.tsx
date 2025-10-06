@@ -9,9 +9,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
-import { fetchData, logoutUser } from "../store/usersReducer";
-import type { Board } from "../utils/type";
+import { addBoard, fetchData, logoutUser } from "../store/usersReducer";
+import type { Board, User } from "../utils/type";
 import { useNavigate } from "react-router-dom";
+import { ModalDelete } from "../components/ModalDelete";
 
 export const Dashboard = () => {
 	const { currentUserId, users } = useSelector(
@@ -25,6 +26,7 @@ export const Dashboard = () => {
 	const currentUser = users.find((user) => user.id === currentUserId);
 	const [openSidebar, setOpenSidebar] = useState(false);
 	const [isEdit, setIsEdit] = useState<Board | null>(null);
+	const [isDelete, setIsDelete] = useState("");
 	const [openModalAdd, setOpenModalAdd] = useState(false);
 	const toggleSidebarMobile = (): void => {
 		setOpenSidebar(!openSidebar);
@@ -40,6 +42,22 @@ export const Dashboard = () => {
 		setIsEdit(board);
 		handleOpenModalAdd();
 	};
+	const handleOpenModalDelete = (id: string) => {
+		setIsDelete(id);
+	};
+	const handleCloseModalDelete = (): void => {
+		setIsDelete("");
+	};
+	const onDelete = (): void => {
+		if (currentUser) {
+			const currentUserUpdates: User = {
+				...currentUser,
+				boards: currentUser?.boards.filter((b) => b.id !== isDelete),
+			};
+			dispatch(addBoard(currentUserUpdates));
+		}
+		handleCloseModalDelete();
+	};
 	const handleLogout = (): void => {
 		dispatch(logoutUser());
 		navigate("/login");
@@ -52,7 +70,12 @@ export const Dashboard = () => {
 					isEdit={isEdit}
 				></ModalAddEditBoard>
 			)}
-			{/* <ModalDelete></ModalDelete> */}
+			{isDelete && (
+				<ModalDelete
+					handleClose={handleCloseModalDelete}
+					onDelete={onDelete}
+				></ModalDelete>
+			)}
 			<Header openSidebarMobile={toggleSidebarMobile}></Header>
 			{/* Body chia 2 cột */}
 			<div className="flex flex-1 overflow-hidden">
@@ -94,6 +117,8 @@ export const Dashboard = () => {
 								key={board.id}
 								board={board}
 								handleEdit={() => handleEdit(board)}
+								handleDelete={() => handleOpenModalDelete(board.id)}
+								onClick={() => navigate(`/board/${board.id}`)}
 							></DashboardCartItem>
 						))}
 						<DashboardCartAdd handleAdd={handleOpenModalAdd}></DashboardCartAdd>

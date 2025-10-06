@@ -243,7 +243,7 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 						onClick={onSubmit}
 						className="px-2 py-1 border text-[16px] border-[#0D6EFD] rounded-md text-[#0D6EFD]"
 					>
-						Create
+						{isEdit ? "Save" : "Create"}
 					</button>
 				</div>
 			</div>

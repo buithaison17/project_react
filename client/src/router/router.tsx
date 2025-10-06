@@ -8,5 +8,5 @@ export const router = createBrowserRouter([
 	{ path: "/register", element: <RegisterPage></RegisterPage> },
 	{ path: "/login", element: <LoginPage></LoginPage> },
 	{ path: "/dashboard", element: <Dashboard></Dashboard> },
-	{ path: "/board", element: <Board></Board> },
+	{ path: `/board/:id`, element: <Board></Board> },
 ]);
