@@ -6,23 +6,46 @@ import { DashboardCartAdd } from "../components/DashboardCartAdd";
 import { Sidebar } from "../components/Sidebar";
 import { SidebarMobile } from "../components/SidebarMobile";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
-// import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
-// import { ModalDelete } from "../components/ModalDelete";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/store";
+import { ModalAddEditBoard } from "../components/ModalAddEditBoard";
+import { fetchData } from "../store/usersReducer";
+import type { Board } from "../utils/type";
 
 export const Dashboard = () => {
-	const { currentUser } = useSelector((state: RootState) => state.usersReducer);
+	const { currentUserId, users } = useSelector(
+		(state: RootState) => state.usersReducer
+	);
+	const dispatch = useDispatch<AppDispatch>();
 	useEffect(() => {
-		console.log(currentUser);
-	});
+		dispatch(fetchData());
+	}, [dispatch]);
+	const currentUser = users.find((user) => user.id === currentUserId);
 	const [openSidebar, setOpenSidebar] = useState(false);
+	const [isEdit, setIsEdit] = useState<Board | null>(null);
 	const toggleSidebarMobile = (): void => {
 		setOpenSidebar(!openSidebar);
 	};
+	const handleOpenModalAdd = (): void => {
+		setOpenModalAdd(true);
+	};
+	const handleCloseModalAdd = (): void => {
+		setOpenModalAdd(false);
+		setIsEdit(null);
+	};
+	const handleEdit = (board: Board): void => {
+		setIsEdit(board);
+		handleOpenModalAdd();
+	};
+	const [openModalAdd, setOpenModalAdd] = useState(false);
 	return (
 		<div className="relative h-screen w-screen bg-gray-100 flex flex-col">
-			{/* <ModalAddEditBoard></ModalAddEditBoard> */}
+			{openModalAdd && (
+				<ModalAddEditBoard
+					handleClose={handleCloseModalAdd}
+					isEdit={isEdit}
+				></ModalAddEditBoard>
+			)}
 			{/* <ModalDelete></ModalDelete> */}
 			<Header openSidebarMobile={toggleSidebarMobile}></Header>
 			{/* Body chia 2 cột */}
@@ -60,9 +83,14 @@ export const Dashboard = () => {
 
 					{/* Workspace boards */}
 					<div className="p-2 grid grid-cols-4 gap-3 mt-3 max-sm:grid-cols-2">
-						<DashboardCartItem />
-						<DashboardCartItem />
-						<DashboardCartAdd></DashboardCartAdd>
+						{currentUser?.boards.map((board) => (
+							<DashboardCartItem
+								key={board.id}
+								board={board}
+								handleEdit={() => handleEdit(board)}
+							></DashboardCartItem>
+						))}
+						<DashboardCartAdd handleAdd={handleOpenModalAdd}></DashboardCartAdd>
 					</div>
 
 					{/* Starred boards */}
@@ -71,11 +99,7 @@ export const Dashboard = () => {
 							<StarBorderIcon fontSize="large" />
 							<div className="text-[28px] text-[#212529]">Starred Boards</div>
 						</div>
-						<div className="grid grid-cols-4 gap-3 mt-5 max-sm:grid-cols-2">
-							{Array.from({ length: 10 }).map((_, i) => (
-								<DashboardCartItem key={i} />
-							))}
-						</div>
+						<div className="grid grid-cols-4 gap-3 mt-5 max-sm:grid-cols-2"></div>
 					</div>
 				</div>
 			</div>

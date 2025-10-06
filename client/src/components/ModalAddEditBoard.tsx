@@ -1,106 +1,193 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import type { Board, User } from "../utils/type";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import { getDateNow } from "../utils/getDateNow";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/store";
+import { addBoard, fetchData } from "../store/usersReducer";
 
 interface ImageItem {
 	image: string;
-	isChoose: boolean;
 }
 
 interface ColorItem {
 	from: string;
 	to: string;
-	isChoose: boolean;
 }
 
-const initialImageRow: ImageItem[] = [
+const imageRow: ImageItem[] = [
 	{
 		image:
 			"https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378225/m2zskmrawqpvxnvsuetr.jpg",
-		isChoose: false,
 	},
 	{
 		image:
 			"https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
-		isChoose: false,
 	},
 	{
 		image:
 			"https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378938/tv6klliekufan47mzmdy.jpg",
-		isChoose: false,
 	},
 	{
 		image:
 			"https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378951/zgjhcdp7zqdubp5rrcfo.jpg",
-		isChoose: false,
 	},
 ];
 
-const initialColorRow: ColorItem[] = [
+const colorRow: ColorItem[] = [
 	{
 		from: "#FFB100",
 		to: "#FA0C00",
-		isChoose: false,
 	},
 	{
 		from: "#2609FF",
 		to: "#D20CFF",
-		isChoose: false,
 	},
 	{
 		from: "#00FF2F",
 		to: "#00FFC8",
-		isChoose: false,
 	},
 	{
 		from: "#00FFE5",
 		to: "#004BFA",
-		isChoose: false,
 	},
 	{
 		from: "#FFA200",
 		to: "#EDFA00",
-		isChoose: false,
 	},
 	{
 		from: "#FF00EA",
 		to: "#FA0C00",
-		isChoose: false,
 	},
 ];
 
-export const ModalAddEditBoard = () => {
-	const [imageRow, setImageRow] = useState<ImageItem[]>(initialImageRow);
-	const [colorRow, setColorRow] = useState<ColorItem[]>(initialColorRow);
-	const handleChoose = <T extends { isChoose: boolean }>(
-		list: T[],
-		index: number
-	): T[] => {
-		return list.map((item, i) => ({ ...item, isChoose: i === index }));
+interface PropsType {
+	handleClose: () => void;
+	isEdit?: Board | null;
+}
+
+export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
+	const { currentUserId, users } = useSelector(
+		(state: RootState) => state.usersReducer
+	);
+	const currentUser = useMemo(() => {
+		return users.find((user) => user.id === currentUserId);
+	}, [users, currentUserId]);
+	const dispatch = useDispatch<AppDispatch>();
+	useEffect(() => {
+		dispatch(fetchData());
+	}, [dispatch]);
+	const [inputState, setInputState] = useState({
+		title: "",
+		color: {
+			from: "",
+			to: "",
+		},
+		image: "",
+	});
+	useEffect(() => {
+		setInputState({
+			...inputState,
+			title: isEdit?.title as string,
+			image: isEdit?.backdrop as string,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isEdit]);
+	const handleTitle = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		setInputState({ ...inputState, title: e.target.value });
 	};
-	const onChooseImage = (index: number): void => {
-		setImageRow(handleChoose(imageRow, index));
+	const handleImage = (value: string): void => {
+		setInputState({ ...inputState, image: value });
 	};
-	const onChooseColor = (index: number): void => {
-		setColorRow(handleChoose(colorRow, index));
+	const handleColor = (from: string, to: string): void => {
+		setInputState({
+			...inputState,
+			color: {
+				from: from,
+				to: to,
+			},
+		});
+	};
+	const onSubmit = (): void => {
+		const { title, image } = inputState;
+		if (!title.trim()) {
+			toast.error("Tiêu đề board không được để trống");
+			return;
+		}
+		if (!isEdit) {
+			const board: Board = {
+				id: Math.floor(Math.random() * 1000000).toString(),
+				title: title.trim(),
+				description: "",
+				created_at: getDateNow(),
+				backdrop: image ? image : imageRow[0].image,
+				is_starred: false,
+				list: [],
+			};
+			const newCurrentUser: User = {
+				...currentUser!,
+				boards: [...currentUser!.boards, board],
+			};
+			dispatch(addBoard(newCurrentUser!));
+			toast.success("Thêm thành công");
+		} else {
+			const boardUpdates: Board = {
+				...isEdit,
+				title: inputState.title.trim(),
+				backdrop: inputState.image,
+			};
+			if (currentUser) {
+				const currentUserUpdates: User = {
+					...currentUser,
+					boards: currentUser?.boards.map((board) =>
+						board.id === isEdit.id ? boardUpdates : board
+					),
+				};
+				dispatch(addBoard(currentUserUpdates));
+				toast.success("Sửa thành công");
+			}
+		}
+		handleClose();
 	};
 	return (
 		<div className="fixed inset-0 flex justify-center items-center z-[9999]">
+			<ToastContainer
+				position="top-left"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="light"
+				transition={Bounce}
+			/>
 			{/* Overlay */}
-			<div className="fixed inset-0 h-screen w-screen bg-[rgba(0,0,0,0.3)]" />
+			<div
+				onClick={handleClose}
+				className="fixed inset-0 h-screen w-screen bg-[rgba(0,0,0,0.3)]"
+			/>
 
 			{/* Content */}
 			<div className="relative z-[10000] py-3 bg-white rounded-md shadow-xl w-[500px]">
 				<div className="flex justify-between items-center p-3 border-b border-b-gray-300">
-					<div className="text-[20px] font-bold">Create Board</div>
-					<ClearIcon></ClearIcon>
+					<div className="text-[20px] font-bold">
+						{isEdit ? "Edit Board" : "Create Board"}
+					</div>
+					<div onClick={handleClose} className="cursor-pointer">
+						<ClearIcon></ClearIcon>
+					</div>
 				</div>
 				<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
 					<div className="text-[20px] font-bold text-[#212529]">Background</div>
 					<div className="grid grid-cols-4 gap-1">
 						{imageRow.map((item, index) => (
 							<div
-								onClick={() => onChooseImage(index)}
+								onClick={() => handleImage(item.image)}
 								key={index}
 								className="relative"
 							>
@@ -108,7 +195,7 @@ export const ModalAddEditBoard = () => {
 									src={item.image}
 									className="w-[108px] rounded-md h-[60px]"
 								/>
-								{item.isChoose && (
+								{item.image === inputState.image && (
 									<CheckCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" />
 								)}
 							</div>
@@ -120,14 +207,17 @@ export const ModalAddEditBoard = () => {
 					<div className="grid grid-cols-6 gap-1">
 						{colorRow.map((item, index) => (
 							<div
+								onClick={() => handleColor(item.from, item.to)}
 								key={index}
-								onClick={() => onChooseColor(index)}
 								style={{
 									backgroundImage: `linear-gradient(to bottom, ${item.from}, ${item.to})`,
 								}}
 								className={`h-[40px] rounded-md flex justify-center items-center`}
 							>
-								{item.isChoose && <CheckCircleIcon className="text-white" />}
+								{item.from === inputState.color.from &&
+									item.to === inputState.color.to && (
+										<CheckCircleIcon className="text-white" />
+									)}
 							</div>
 						))}
 					</div>
@@ -136,6 +226,8 @@ export const ModalAddEditBoard = () => {
 					<div className="text-[18px] font-bold text-[v]">Board title</div>
 					<input
 						type="text"
+						onChange={handleTitle}
+						value={inputState.title}
 						className="py-[12px] px-3 text-[16px] text-[#212529] border rounded-md hover:border-blue-500"
 					/>
 					<div className="text-[16px] font-normal text-[#212529]">
@@ -143,10 +235,16 @@ export const ModalAddEditBoard = () => {
 					</div>
 				</div>
 				<div className="flex gap-3 justify-end items-center py-4 px-3">
-					<button className="px-2 py-1 border text-[16px] border-[#DC3545] rounded-md text-[#DC3545]">
+					<button
+						onClick={handleClose}
+						className="px-2 py-1 border text-[16px] border-[#DC3545] rounded-md text-[#DC3545]"
+					>
 						Close
 					</button>
-					<button className="px-2 py-1 border text-[16px] border-[#0D6EFD] rounded-md text-[#0D6EFD]">
+					<button
+						onClick={onSubmit}
+						className="px-2 py-1 border text-[16px] border-[#0D6EFD] rounded-md text-[#0D6EFD]"
+					>
 						Create
 					</button>
 				</div>

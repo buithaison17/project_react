@@ -5,17 +5,16 @@ import {
 } from "@reduxjs/toolkit";
 import type { User } from "../utils/type";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface StateType {
 	users: User[];
-	currentUser: User | null;
+	currentUserId: string;
 }
 
 const initialState: StateType = {
 	users: [],
-	currentUser: localStorage.getItem("currentUser")
-		? JSON.parse(localStorage.getItem("currentUser")!)
-		: null,
+	currentUserId: localStorage.getItem("currentUserId") || "",
 };
 
 export const fetchData = createAsyncThunk<User[]>("users/set", async () => {
@@ -31,6 +30,22 @@ export const addUser = createAsyncThunk<User, User>(
 	}
 );
 
+export const addBoard = createAsyncThunk<User, User>(
+	"users/addBoard",
+	async (user) => {
+		try {
+			const response = await axios.put(
+				`http://localhost:8080/users/${user.id}`,
+				user
+			);
+			toast("Thêm thành công");
+			return response.data;
+		} catch {
+			toast.error("Đã xảy ra lỗi");
+		}
+	}
+);
+
 const usersSlice = createSlice({
 	name: "usersSlice",
 	initialState,
@@ -39,18 +54,16 @@ const usersSlice = createSlice({
 			state,
 			action: PayloadAction<{ email: string; password: string }>
 		): void => {
-			const { email, password } = action.payload;
-			const user = state.users.find(
-				(user) => user.email === email && user.password === password
-			);
+			const { email } = action.payload;
+			const user = state.users.find((user) => user.email === email);
 			if (user) {
-				state.currentUser = user;
-				localStorage.setItem("currentUser", JSON.stringify(user));
-			} else state.currentUser = null;
+				state.currentUserId = user.id;
+				localStorage.setItem("currentUserId", user.id);
+			}
 		},
 		logoutUser: (state): void => {
-			state.currentUser = null;
-			localStorage.removeItem("currentUser");
+			state.currentUserId = "null";
+			localStorage.removeItem("currentUserId");
 		},
 	},
 	extraReducers(builder) {
@@ -59,6 +72,12 @@ const usersSlice = createSlice({
 		});
 		builder.addCase(addUser.fulfilled, (state, action) => {
 			state.users = [...state.users, action.payload];
+		});
+		builder.addCase(addBoard.fulfilled, (state, action) => {
+			const userIndex: number = state.users.findIndex(
+				(user) => user.id === action.payload.id
+			);
+			state.users[userIndex] = action.payload;
 		});
 	},
 });

@@ -1,19 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/trello-logo.png";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../store/store";
-import {
-	validateEmailForRegister,
-	validatePassword,
-	validateUsername,
-} from "../utils/validate";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/store";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import type { User } from "../utils/type";
 import { getDateNow } from "../utils/getDateNow";
-import { addUser } from "../store/usersReducer";
+import { addUser, fetchData } from "../store/usersReducer";
 
 export const RegisterPage = () => {
+	const { users } = useSelector((state: RootState) => state.usersReducer);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 	const [inputState, setInputState] = useState({
@@ -21,36 +17,45 @@ export const RegisterPage = () => {
 		username: "",
 		password: "",
 	});
+	useEffect(() => {
+		dispatch(fetchData());
+	});
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const { name, value } = e.target;
-		setInputState({ ...inputState, [name]: value });
+		setInputState({ ...inputState, [name]: value });	
 	};
-	const onSubmit = (): void => {
-		let isCheck = true;
-		if (
-			!validateEmailForRegister(inputState.email) ||
-			!validatePassword(inputState.password)
-		) {
-			toast.error("Địa chỉ email hoặc mật khẩu không đúng");
-			isCheck = false;
+	const onSubmit = async () => {
+		if (!inputState.email.trim() || !inputState.password.trim()) {
+			toast.error("Email hoặc mật khẩu không được để trống");
+			return;
 		}
-		if (!validateUsername(inputState.username)) {
+		if (!inputState.username.trim()) {
 			toast.error("Username không được để trống");
-			isCheck = false;
+			return;
 		}
-		if (isCheck) {
-			const user: User = {
-				id: Math.floor(Math.random() * 1000000).toString(),
-				username: inputState.username.trim(),
-				email: inputState.email.trim(),
-				password: inputState.password.trim(),
-				created_at: getDateNow(),
-				boards: [],
-			};
-			dispatch(addUser(user));
-			toast.success("Đăng kí thành công", {
+		if (!inputState.email.includes("@")) {
+			toast.error("Email không đúng định dạng");
+			return;
+		}
+		if (users.some((user) => user.email === inputState.email)) {
+			toast.error("Email đã tồn tại");
+			return;
+		}
+		const user: User = {
+			id: Math.floor(Math.random() * 1000000).toString(),
+			username: inputState.username.trim(),
+			email: inputState.email.trim(),
+			password: inputState.password.trim(),
+			created_at: getDateNow(),
+			boards: [],
+		};
+		try {
+			await dispatch(addUser(user)).unwrap();
+			toast.success("Đăng ký thành công", {
 				onClose: () => navigate("/login"),
 			});
+		} catch {
+			toast.error("Đã có lỗi xảy ra");
 		}
 	};
 	return (

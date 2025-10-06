@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/trello-logo.png";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { validateLogin } from "../utils/validate";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchData, loginUser } from "../store/usersReducer";
-import type { AppDispatch } from "../store/store";
+import type { AppDispatch, RootState } from "../store/store";
 
 export const LoginPage = () => {
+	const { users } = useSelector((state: RootState) => state.usersReducer);
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 	const [inputState, setInputState] = useState({
@@ -21,16 +21,26 @@ export const LoginPage = () => {
 		const { name, value } = e.target;
 		setInputState({ ...inputState, [name]: value });
 	};
-	const onSubmit = (): void => {
-		if (!validateLogin(inputState.email, inputState.password)) {
-			toast.error("Địa chỉ email hoặc mật khẩu không chính xác");
+	const onSubmit = async () => {
+		const { email, password } = inputState;
+		if (!email.trim() || !password.trim()) {
+			toast.error("Email hoặc mật khẩu không được để trống");
 			return;
 		}
-		const user = {
-			email: inputState.email,
-			password: inputState.password,
-		};
-		dispatch(loginUser(user));
+		if (!email.includes("@")) {
+			toast.error("Email không đúng định dạng");
+			return;
+		}
+		const existingUser = users.find((user) => user.email === email);
+		if (!existingUser?.email) {
+			toast.error("Email không tồn tại");
+			return;
+		}
+		if (existingUser?.password !== inputState.password) {
+			toast.error("Mật khẩu không đúng");
+			return;
+		}
+		dispatch(loginUser({ email, password }));
 		navigate("/dashboard");
 	};
 	return (
