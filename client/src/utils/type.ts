@@ -1,4 +1,4 @@
-export type Status = "pending";
+export type Status = "pending" | "success";
 
 export interface Tag {
 	id: string;

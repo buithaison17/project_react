@@ -2,13 +2,73 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AddIcon from "@mui/icons-material/Add";
 import Frame from "../assets/images/frame.png";
-import type { List } from "../utils/type";
+import type { List, Task, User } from "../utils/type";
+import CloseIcon from "@mui/icons-material/Close";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/store";
+import { useParams } from "react-router-dom";
+import { addBoard, fetchData } from "../store/usersReducer";
 
 interface PropsType {
 	list: List;
 }
 
 export const ListCard = ({ list }: PropsType) => {
+	const { users, currentUserId } = useSelector(
+		(state: RootState) => state.usersReducer
+	);
+	const dispatch = useDispatch<AppDispatch>();
+	const { id } = useParams();
+	useEffect(() => {
+		dispatch(fetchData());
+	}, [dispatch]);
+	const currentUser = users.find((user) => user.id === currentUserId);
+	const [isAddTask, setIsAddTask] = useState(false);
+	const handleOpenAddCart = (): void => {
+		setIsAddTask(true);
+	};
+	const handleCloseAddCart = (): void => {
+		setIsAddTask(false);
+		setInput("");
+	};
+	const [input, setInput] = useState("");
+	const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		setInput(e.target.value);
+	};
+	const onAddTask = (idTask: string): void => {
+		if (!input.trim()) return;
+		const newTask: Task = {
+			id: Math.floor(Math.random() * 1000000).toString(),
+			title: input.trim(),
+			status: "pending",
+			due_date: "",
+			description: "",
+			tag: [],
+		};
+		if (currentUser) {
+			const updates: User = {
+				...currentUser,
+				boards: currentUser.boards.map((board) =>
+					board.id === id
+						? {
+								...board,
+								list: board.list.map((item) =>
+									item.id === idTask
+										? {
+												...item,
+												tasks: [...item.tasks, newTask],
+										  }
+										: item
+								),
+						  }
+						: board
+				),
+			};
+			dispatch(addBoard(updates));
+			handleCloseAddCart();
+		}
+	};
 	return (
 		<div className="bg-[#F1F2F4] rounded-md  p-3">
 			<div className="flex items-center justify-between">
@@ -22,26 +82,53 @@ export const ListCard = ({ list }: PropsType) => {
 						className="flex gap-1 items-center bg-white p-1 shadow rounded-md"
 					>
 						<CheckCircleIcon
-							className="text-green-500"
+							className={task.status === "success" ? "text-green-500" : "text-gray-400"}
 							fontSize="small"
 						></CheckCircleIcon>
 						<div>{task.title}</div>
 					</div>
 				))}
 			</div>
-			<div className="mt-4 flex justify-between items-center">
-				<div className="flex gap-1 items-center">
-					<AddIcon fontSize="small"></AddIcon>
-					<div className="text-[14px] text-[#44546F] hover:underline cursor-pointer">
-						Add a cart
+			{!isAddTask && (
+				<div className="mt-4 flex justify-between items-center">
+					<div className="flex gap-1 items-center">
+						<AddIcon fontSize="small"></AddIcon>
+						<div
+							onClick={handleOpenAddCart}
+							className="text-[14px] text-[#44546F] hover:underline cursor-pointer"
+						>
+							Add a cart
+						</div>
+					</div>
+					<img
+						src={Frame}
+						className="w-[16px] h-[16px] object-cover object-center"
+						alt=""
+					/>
+				</div>
+			)}
+			{isAddTask && (
+				<div className="flex flex-col gap-2">
+					<input
+						type="text"
+						className="h-[56px] rounded-lg shadow w-full p-2 text-[#626F86] text-[14px] border hover:border-blue-500 focus:border-blue-500 focus:outline-none"
+						placeholder="Enter a title or paste a link"
+						value={input}
+						onChange={handleInput}
+					/>
+					<div className="flex gap-2 items-center">
+						<button
+							onClick={() => onAddTask(list.id)}
+							className="px-2 py-1 bg-blue-500 text-white rounded"
+						>
+							Add card
+						</button>
+						<div onClick={handleCloseAddCart} className="cursor-pointer">
+							<CloseIcon fontSize="small"></CloseIcon>
+						</div>
 					</div>
 				</div>
-				<img
-					src={Frame}
-					className="w-[16px] h-[16px] object-cover object-center"
-					alt=""
-				/>
-			</div>
+			)}
 		</div>
 	);
 };

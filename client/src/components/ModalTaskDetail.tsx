@@ -3,6 +3,7 @@ import TaskModalDesIcon from "../assets/images/task-modal-des-icon.png";
 import LabelIcon from "../assets/images/label-icon.png";
 import DateIcon from "../assets/images/date-icon.png";
 import DeleteIcon from "../assets/images/delete-icon.png";
+import MDEditor from "@uiw/react-md-editor";
 
 export const ModalTaskDetail = () => {
 	return (
@@ -36,7 +37,7 @@ export const ModalTaskDetail = () => {
 							</div>
 						</div>
 						<div className="px-7 py-3">
-							<div className="w-[512px] h-[275px] bg-black "></div>
+							<MDEditor className="w-[512px] h-[275px]" />
 						</div>
 					</div>
 					<div className="flex flex-col gap-2">

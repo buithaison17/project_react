@@ -1,6 +1,7 @@
 import EditItemDashboard from "../assets/images/edit-dashboard.png";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { Board } from "../utils/type";
+import type React from "react";
 
 interface PropsType {
 	board: Board;
@@ -32,12 +33,21 @@ export const DashboardCartItem = ({
 					className="w-[16px] h-[16px] object-cover object-center"
 					src={EditItemDashboard}
 				></img>
-				<div onClick={handleEdit} className="text-[14px] text-white">
+				<div
+					onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+						e.stopPropagation();
+						handleEdit();
+					}}
+					className="text-[14px] text-white"
+				>
 					Edit this board
 				</div>
 			</div>
 			<div
-				onClick={handleDelete}
+				onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+					e.stopPropagation();
+					handleDelete();
+				}}
 				className="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 duration-500 cursor-pointer"
 			>
 				<DeleteIcon className="text-red-500" fontSize="large"></DeleteIcon>
