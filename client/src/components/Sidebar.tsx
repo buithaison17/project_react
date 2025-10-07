@@ -11,7 +11,7 @@ interface PropsType {
 export const Sidebar = ({ handleLogout }: PropsType) => {
 	return (
 		<div className="w-[240px] border-r-2 border-gray-300 bg-gray-100 overflow-y-auto h-full max-sm:hidden">
-			<div className="flex flex-col gap-3 border-b-2 px-4 py-10 border-b-gray-300">
+			<div className="flex flex-col gap-3 border-b-2 px-4 py-6 border-b-gray-300">
 				<div className="text-[12px]">YOUR WORKSPACES</div>
 				<div className="flex gap-2 items-center cursor-pointer">
 					<FormatListBulletedIcon className="text-blue-500" fontSize="small" />

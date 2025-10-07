@@ -22,7 +22,7 @@ export const RegisterPage = () => {
 	}, [dispatch]);
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const { name, value } = e.target;
-		setInputState({ ...inputState, [name]: value });	
+		setInputState({ ...inputState, [name]: value });
 	};
 	const onSubmit = async () => {
 		if (!inputState.email.trim() || !inputState.password.trim()) {
@@ -83,7 +83,7 @@ export const RegisterPage = () => {
 						onChange={handleInput}
 						type="email"
 						placeholder="Email address"
-						className="border p-2 rounded-md hover:border-blue-500"
+						className="border p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 					/>
 					<input
 						type="text"
@@ -91,7 +91,7 @@ export const RegisterPage = () => {
 						value={inputState.username}
 						onChange={handleInput}
 						placeholder="Username"
-						className="border p-2 rounded-md hover:border-blue-500"
+						className="border p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 					/>
 					<input
 						name="password"
@@ -99,7 +99,7 @@ export const RegisterPage = () => {
 						onChange={handleInput}
 						type="password"
 						placeholder="Password"
-						className="border p-2 rounded-md hover:border-blue-500"
+						className="border p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 					/>
 				</div>
 				<div>

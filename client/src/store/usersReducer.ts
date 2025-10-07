@@ -38,7 +38,6 @@ export const addBoard = createAsyncThunk<User, User>(
 				`http://localhost:8080/users/${user.id}`,
 				user
 			);
-			toast("Thêm thành công");
 			return response.data;
 		} catch {
 			toast.error("Đã xảy ra lỗi");

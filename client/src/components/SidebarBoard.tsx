@@ -23,7 +23,10 @@ export const SidebarBoard = () => {
 		<div className="w-[240px] bg-[#F8F9FA]">
 			<div className="flex flex-col gap-3 px-3 py-6 border-b border-b-gray-300">
 				<div className="text-[12px] text-[#212529BF]">YOU WORKSPACES</div>
-				<div className="flex gap-2 items-center cursor-pointer">
+				<div
+					onClick={() => navigate("/dashboard")}
+					className="flex gap-2 items-center cursor-pointer"
+				>
 					<FormatListBulletedIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Boards</div>
 				</div>
@@ -41,7 +44,7 @@ export const SidebarBoard = () => {
 					<div className="text-[14px] text-[#172B4D]">Your Boards</div>
 					<AddIcon className="cursor-pointer" fontSize="small"></AddIcon>
 				</div>
-				<div className="flex flex-col gap-3">
+				<div className="flex flex-col">
 					{currentUser?.boards.map((board) => (
 						<SidebarBoardItem
 							key={board.id}

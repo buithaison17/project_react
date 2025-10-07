@@ -70,7 +70,7 @@ export const ListCard = ({ list }: PropsType) => {
 		}
 	};
 	return (
-		<div className="bg-[#F1F2F4] rounded-md  p-3">
+		<div className="bg-[#F1F2F4] rounded-md p-3">
 			<div className="flex items-center justify-between">
 				<div className="text-[14px] text-[#172B4D] font-bold">{list.title}</div>
 				<MoreHorizIcon fontSize="small"></MoreHorizIcon>

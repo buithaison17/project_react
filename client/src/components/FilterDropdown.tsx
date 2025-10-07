@@ -4,14 +4,18 @@ import NoDatesIcon from "../assets/images/no-dates-icon.png";
 import DueNextDayIcon from "../assets/images/due-nextday-icon.png";
 import NoLabelsIcon from "../assets/images/no-labels-icon.png";
 
-export const FilterDropdown = () => {
+interface PropsType {
+	toggleFilter: () => void;
+}
+
+export const FilterDropdown = ({ toggleFilter }: PropsType) => {
 	return (
 		<div className="absolute flex flex-col bg-white overflow-hidden w-[384px] rounded-lg shadow top-6 right-0 p-3">
 			<div className="flex justify-between items-center">
 				<div className="flex-1 text-center text-[14px] text-[#44546F] font-semibold">
 					Filter
 				</div>
-				<div className="cursor-pointer">
+				<div onClick={toggleFilter} className="cursor-pointer">
 					<CloseIcon fontSize="small"></CloseIcon>
 				</div>
 			</div>
@@ -29,49 +33,85 @@ export const FilterDropdown = () => {
 					Card status
 				</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" className="w-[16px] h-[16px]" />
-					<div className="text-[14px] text-[#172B4D]">Marked as complete</div>
+					<input
+						type="checkbox"
+						id="marked-as-complete"
+						className="w-[16px] h-[16px]"
+					/>
+					<label
+						htmlFor="marked-as-complete"
+						className="text-[14px] text-[#172B4D]"
+					>
+						Marked as complete
+					</label>
 				</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" className="w-[16px] h-[16px]" />
-					<div className="text-[14px] text-[#172B4D]">
+					<input
+						type="checkbox"
+						id="not-marked-as-complete"
+						className="w-[16px] h-[16px]"
+					/>
+					<label
+						htmlFor="not-marked-as-complete"
+						className="text-[14px] text-[#172B4D]"
+					>
 						Not marked as complete
-					</div>
+					</label>
 				</div>
 			</div>
 			<div className="flex flex-col gap-2 mt-3">
 				<div className="text-[12px] text-[#44546F] font-semibold">Due date</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" className="w-[16px] h-[16px]" />
+					<input type="checkbox" id="no-dates" className="w-[16px] h-[16px]" />
 					<div className="flex items-center gap-1">
 						<img src={NoDatesIcon} className="w-[24px] h-[24px]" alt="" />
-						<div className="text-[14px] text-[#172B4D]">No dates</div>
+						<label htmlFor="no-dates" className="text-[14px] text-[#172B4D]">
+							No dates
+						</label>
 					</div>
 				</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" className="w-[16px] h-[16px]" />
+					<input type="checkbox" id="overdue" className="w-[16px] h-[16px]" />
 					<div className="flex items-center gap-1">
 						<img src={OverdueIcon} className="w-[24px] h-[24px]" alt="" />
-						<div className="text-[14px] text-[#172B4D]">No dates</div>
+						<label htmlFor="overdue" className="text-[14px] text-[#172B4D]">
+							Overdue
+						</label>
 					</div>
 				</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" className="w-[16px] h-[16px]" />
+					<input
+						type="checkbox"
+						id="due-in-the-next-day"
+						className="w-[16px] h-[16px]"
+					/>
 					<div className="flex items-center gap-1">
 						<img src={DueNextDayIcon} className="w-[24px] h-[24px]" alt="" />
-						<div className="text-[14px] text-[#172B4D]">
+						<label
+							htmlFor="due-in-the-next-day"
+							className="text-[14px] text-[#172B4D]"
+						>
 							Due in the next day
-						</div>
+						</label>
 					</div>
 				</div>
 			</div>
 			<div className="flex flex-col gap-2 mt-3">
 				<div className="text-[12px] text-[#44546F] font-semibold">Labels</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" className="w-[16px] h-[16px]" />
+					<input
+						type="checkbox"
+						id="labels-marked-as-complete"
+						className="w-[16px] h-[16px]"
+					/>
 					<div className="flex gap-1 items-center">
 						<img src={NoLabelsIcon} className="w-[24px] h-[24px]" alt="" />
-						<div className="text-[14px] text-[#172B4D]">Marked as complete</div>
+						<label
+							htmlFor="labels-marked-as-complete"
+							className="text-[14px] text-[#172B4D]"
+						>
+							Marked as complete
+						</label>
 					</div>
 				</div>
 				<div className="flex gap-6 items-center px-3">

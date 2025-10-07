@@ -3,10 +3,20 @@ import { RegisterPage } from "../pages/RegisterPage";
 import { LoginPage } from "../pages/LoginPage";
 import { Dashboard } from "../pages/Dashboard";
 import { Board } from "../pages/Board";
+import { MainBoard } from "../components/MainBoard";
 
 export const router = createBrowserRouter([
 	{ path: "/register", element: <RegisterPage></RegisterPage> },
 	{ path: "/login", element: <LoginPage></LoginPage> },
 	{ path: "/dashboard", element: <Dashboard></Dashboard> },
-	{ path: `/board/:id`, element: <Board></Board> },
+	{
+		path: `/board`,
+		element: <Board></Board>,
+		children: [
+			{
+				path: ":id",
+				element: <MainBoard></MainBoard>,
+			},
+		],
+	},
 ]);

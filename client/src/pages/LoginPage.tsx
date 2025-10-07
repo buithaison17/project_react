@@ -70,7 +70,7 @@ export const LoginPage = () => {
 						name="email"
 						type="email"
 						placeholder="Email address"
-						className="border p-2 rounded-md hover:border-blue-500"
+						className="border p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 					/>
 					<input
 						value={inputState.password}
@@ -78,7 +78,7 @@ export const LoginPage = () => {
 						onChange={handleInput}
 						type="password"
 						placeholder="Password"
-						className="border p-2 rounded-md hover:border-blue-500"
+						className="border p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 					/>
 				</div>
 				<div>
