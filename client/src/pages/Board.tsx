@@ -15,6 +15,8 @@ import type { AppDispatch, RootState } from "../store/store";
 import { useEffect } from "react";
 import { fetchData } from "../store/usersReducer";
 import { useParams } from "react-router-dom";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { FilterDropdown } from "../components/FilterDropdown";
 
 export const Board = () => {
 	const { currentUserId, users } = useSelector(
@@ -37,7 +39,7 @@ export const Board = () => {
 				<SidebarBoard />
 				{/* Content */}
 				<div className="flex-1 bg-white">
-					<div className="bg-[#F1F2F4] p-3 flex">
+					<div className="bg-[#F1F2F4] px-4 py-3 flex justify-between items-center">
 						<div className="flex items-center gap-3">
 							<div className="text-[18px] font-bold">{currentBoard?.title}</div>
 							<img src={Star} className="w-[32px] h-[32px]" alt="" />
@@ -57,6 +59,15 @@ export const Board = () => {
 								<img src={CloseTable} className="w-[16px] h-[16px]" alt="" />
 								<div className="text-[14px]">Close this table</div>
 							</div>
+						</div>
+						<div className="relative">
+							<div className="flex gap-2 cursor-pointer">
+								<FilterListIcon fontSize="small"></FilterListIcon>
+								<div className="text-[14px] text-[#172B4D] font-medium">
+									Filters
+								</div>
+							</div>
+								<FilterDropdown></FilterDropdown>
 						</div>
 					</div>
 					<div className="grid grid-cols-4 p-3 gap-3">

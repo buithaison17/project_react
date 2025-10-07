@@ -79,12 +79,14 @@ export const ListCard = ({ list }: PropsType) => {
 				{list.tasks.map((task) => (
 					<div
 						key={task.id}
-						className="flex gap-1 items-center bg-white p-1 shadow rounded-md"
+						className="flex gap-1 items-center bg-white px-2 py-1 shadow rounded-md"
 					>
-						<CheckCircleIcon
-							className={task.status === "success" ? "text-green-500" : "text-gray-400"}
-							fontSize="small"
-						></CheckCircleIcon>
+						{task.status === "success" && (
+							<CheckCircleIcon
+								className="text-green-500"
+								fontSize="small"
+							></CheckCircleIcon>
+						)}
 						<div>{task.title}</div>
 					</div>
 				))}
