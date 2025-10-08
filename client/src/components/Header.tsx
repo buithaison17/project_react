@@ -1,15 +1,20 @@
 import logodashboard from "../assets/images/logo-dashboard.png";
 import SearchIcon from "../assets/images/search-icon.png";
 import NavbarIcon from "../assets/images/navbar-icon.png";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
 	openSidebarMobile?: () => void;
 }
 
 export const Header = ({ openSidebarMobile }: Props) => {
+	const navigate = useNavigate();
 	return (
 		<div className="relative shadow-lg z-10 flex justify-between">
-			<div className="flex items-center w-[240px] border-r-2 border-r-gray-300p p-3">
+			<div
+				onClick={() => navigate("/dashboard")}
+				className="flex items-center w-[240px] border-r-2 border-r-gray-300p p-3"
+			>
 				<img
 					src={logodashboard}
 					alt="Dashboard Logo"

@@ -9,7 +9,11 @@ import { useEffect } from "react";
 import { fetchData } from "../store/usersReducer";
 import { useNavigate } from "react-router-dom";
 
-export const SidebarBoard = () => {
+interface PropsType {
+	isStarred: boolean;
+}
+
+export const SidebarBoard = ({ isStarred }: PropsType) => {
 	const { users, currentUserId } = useSelector(
 		(state: RootState) => state.usersReducer
 	);
@@ -24,13 +28,16 @@ export const SidebarBoard = () => {
 			<div className="flex flex-col gap-3 px-3 py-6 border-b border-b-gray-300">
 				<div className="text-[12px] text-[#212529BF]">YOU WORKSPACES</div>
 				<div
-					onClick={() => navigate("/dashboard")}
+					onClick={() => navigate("/board")}
 					className="flex gap-2 items-center cursor-pointer"
 				>
 					<FormatListBulletedIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Boards</div>
 				</div>
-				<div className="flex gap-2 items-center cursor-pointer">
+				<div
+					onClick={() => navigate("/starred-board")}
+					className="flex gap-2 items-center cursor-pointer"
+				>
 					<StarBorderIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Starred Boards</div>
 				</div>
@@ -45,13 +52,21 @@ export const SidebarBoard = () => {
 					<AddIcon className="cursor-pointer" fontSize="small"></AddIcon>
 				</div>
 				<div className="flex flex-col">
-					{currentUser?.boards.map((board) => (
-						<SidebarBoardItem
-							key={board.id}
-							board={board}
-							onClick={() => navigate(`/board/${board.id}`)}
-						></SidebarBoardItem>
-					))}
+					{currentUser?.boards
+						.filter((board) => board.is_starred === isStarred)
+						.map((board) => (
+							<SidebarBoardItem
+								key={board.id}
+								board={board}
+								onClick={() => {
+									if (isStarred) {
+										navigate(`/starred-board/${board.id}`);
+									} else {
+										navigate(`/board/${board.id}`);
+									}
+								}}
+							></SidebarBoardItem>
+						))}
 				</div>
 			</div>
 		</div>

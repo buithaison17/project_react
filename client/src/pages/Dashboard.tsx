@@ -27,6 +27,7 @@ export const Dashboard = () => {
 	const [openSidebar, setOpenSidebar] = useState(false);
 	const [isEdit, setIsEdit] = useState<Board | null>(null);
 	const [isDelete, setIsDelete] = useState("");
+	const [isStarred, setIsStarred] = useState(false);
 	const [openModalAdd, setOpenModalAdd] = useState(false);
 	const toggleSidebarMobile = (): void => {
 		setOpenSidebar(!openSidebar);
@@ -37,6 +38,7 @@ export const Dashboard = () => {
 	const handleCloseModalAdd = (): void => {
 		setOpenModalAdd(false);
 		setIsEdit(null);
+		setIsStarred(false);
 	};
 	const handleEdit = (board: Board): void => {
 		setIsEdit(board);
@@ -68,6 +70,7 @@ export const Dashboard = () => {
 				<ModalAddEditBoard
 					handleClose={handleCloseModalAdd}
 					isEdit={isEdit}
+					isStarred={isStarred}
 				></ModalAddEditBoard>
 			)}
 			{isDelete && (
@@ -112,15 +115,17 @@ export const Dashboard = () => {
 
 					{/* Workspace boards */}
 					<div className="p-2 grid grid-cols-4 gap-3 mt-3 max-sm:grid-cols-2">
-						{currentUser?.boards.map((board) => (
-							<DashboardCartItem
-								key={board.id}
-								board={board}
-								handleEdit={() => handleEdit(board)}
-								handleDelete={() => handleOpenModalDelete(board.id)}
-								onClick={() => navigate(`/board/${board.id}`)}
-							></DashboardCartItem>
-						))}
+						{currentUser?.boards
+							.filter((board) => !board.is_starred)
+							.map((board) => (
+								<DashboardCartItem
+									key={board.id}
+									board={board}
+									handleEdit={() => handleEdit(board)}
+									handleDelete={() => handleOpenModalDelete(board.id)}
+									onClick={() => navigate(`/board/${board.id}`)}
+								></DashboardCartItem>
+							))}
 						<DashboardCartAdd handleAdd={handleOpenModalAdd}></DashboardCartAdd>
 					</div>
 
@@ -130,7 +135,25 @@ export const Dashboard = () => {
 							<StarBorderIcon fontSize="large" />
 							<div className="text-[28px] text-[#212529]">Starred Boards</div>
 						</div>
-						<div className="grid grid-cols-4 gap-3 mt-5 max-sm:grid-cols-2"></div>
+						<div className="grid grid-cols-4 gap-3 mt-5 max-sm:grid-cols-2">
+							{currentUser?.boards
+								.filter((board) => board.is_starred)
+								.map((board) => (
+									<DashboardCartItem
+										key={board.id}
+										board={board}
+										handleDelete={() => handleOpenModalDelete(board.id)}
+										handleEdit={() => handleEdit(board)}
+										onClick={() => navigate(`/starred-board/${board.id}`)}
+									></DashboardCartItem>
+								))}
+							<DashboardCartAdd
+								handleAdd={() => {
+									setIsStarred(true);
+									handleOpenModalAdd();
+								}}
+							></DashboardCartAdd>
+						</div>
 					</div>
 				</div>
 			</div>
