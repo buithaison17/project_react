@@ -11,13 +11,15 @@ import { ModalDelete } from "./ModalDelete";
 import { CardAddList } from "./CardAddList";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
-import { fetchData } from "../store/usersReducer";
-import { useParams } from "react-router-dom";
+import { addBoard, fetchData } from "../store/usersReducer";
+import { useNavigate, useParams } from "react-router-dom";
+import type { Board, User } from "../utils/type";
 
 export const MainBoard = () => {
 	const { currentUserId, users } = useSelector(
 		(state: RootState) => state.usersReducer
 	);
+	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 	useEffect(() => {
 		dispatch(fetchData());
@@ -34,8 +36,29 @@ export const MainBoard = () => {
 		setCloseBoard(!closeBoard);
 	};
 	const onCloseBoard = (): void => {
+		if (!currentUser || !currentBoard) return;
+		const updatesBoard: Board = {
+			...currentBoard,
+			type: "close",
+		};
+		const temp: Board = { ...currentBoard };
+		const updates: User = {
+			...currentUser,
+			boards: currentUser.boards.map((board) =>
+				board.id === id ? updatesBoard : board
+			),
+		};
 		toast.success("Đóng board thành công");
+		dispatch(addBoard(updates));
 		handleCloseBoard();
+		switch (temp.type) {
+			case "normal":
+				navigate("/board");
+				return;
+			case "starred":
+				navigate("/starred-board");
+				return;
+		}
 	};
 	return (
 		<div className="flex-1 bg-white">

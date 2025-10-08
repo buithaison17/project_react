@@ -29,7 +29,10 @@ export const Sidebar = ({ handleLogout }: PropsType) => {
 					<StarBorderIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Starred Boards</div>
 				</div>
-				<div className="flex gap-2 items-center cursor-pointer">
+				<div
+					onClick={() => navigate("/close-board")}
+					className="flex gap-2 items-center cursor-pointer"
+				>
 					<ClearOutlinedIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Closed Boards</div>
 				</div>

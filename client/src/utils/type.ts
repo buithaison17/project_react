@@ -1,4 +1,5 @@
 export type Status = "pending" | "success";
+export type Type = "normal" | "starred" | "close";
 
 export interface Tag {
 	id: string;
@@ -27,7 +28,7 @@ export interface Board {
 	title: string;
 	description: string;
 	backdrop: string;
-	is_starred: boolean;
+	type: Type;
 	created_at: string;
 	list: List[];
 }

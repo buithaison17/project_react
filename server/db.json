@@ -1,31 +1,12 @@
 {
-  "users": [
-    {
-      "id": "815984",
-      "username": "sonbui@gmail.com",
-      "email": "sonbui@gmail.com",
-      "password": "sonbui@gmail.com",
-      "created_at": "2025-10-7 20:0",
-      "boards": [
-        {
-          "id": "275965",
-          "title": "Bùi Thái Sơn",
-          "description": "",
-          "created_at": "2025-10-8 16:32",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378938/tv6klliekufan47mzmdy.jpg",
-          "is_starred": false,
-          "list": []
-        },
-        {
-          "id": "330937",
-          "title": "Thái Sơn",
-          "description": "",
-          "created_at": "2025-10-8 16:32",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378951/zgjhcdp7zqdubp5rrcfo.jpg",
-          "is_starred": true,
-          "list": []
-        }
-      ]
-    }
-  ]
+	"users": [
+		{
+			"id": "815984",
+			"username": "sonbui@gmail.com",
+			"email": "sonbui@gmail.com",
+			"password": "sonbui@gmail.com",
+			"created_at": "2025-10-7 20:0",
+			"boards": []
+		}
+	]
 }

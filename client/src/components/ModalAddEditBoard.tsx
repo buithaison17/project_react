@@ -130,7 +130,7 @@ export const ModalAddEditBoard = ({
 				description: "",
 				created_at: getDateNow(),
 				backdrop: image ? image : imageRow[0].image,
-				is_starred: isStarred,
+				type: isStarred ? "starred" : "normal",
 				list: [],
 			};
 			const newCurrentUser: User = {

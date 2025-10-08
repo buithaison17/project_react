@@ -10,7 +10,7 @@ export const StarredBoard = () => {
 			{/* Body */}
 			<div className="flex flex-1">
 				{/* Sidebar */}
-				<SidebarBoard isStarred={true} />
+				<SidebarBoard type="starred" />
 				{/* Content */}
 				<Outlet></Outlet>
 			</div>

@@ -2,7 +2,7 @@ import { Header } from "../components/Header";
 import { SidebarBoard } from "../components/SidebarBoard";
 import { Outlet } from "react-router-dom";
 
-export const Board = () => {
+export const CloseBoard = () => {
 	return (
 		<div className="h-screen w-screen flex flex-col">
 			{/* Header */}
@@ -10,7 +10,7 @@ export const Board = () => {
 			{/* Body */}
 			<div className="flex flex-1">
 				{/* Sidebar */}
-				<SidebarBoard type="normal" />
+				<SidebarBoard type="close" />
 				{/* Content */}
 				<Outlet></Outlet>
 			</div>

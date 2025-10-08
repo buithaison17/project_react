@@ -116,7 +116,7 @@ export const Dashboard = () => {
 					{/* Workspace boards */}
 					<div className="p-2 grid grid-cols-4 gap-3 mt-3 max-sm:grid-cols-2">
 						{currentUser?.boards
-							.filter((board) => !board.is_starred)
+							.filter((board) => board.type === "normal")
 							.map((board) => (
 								<DashboardCartItem
 									key={board.id}
@@ -137,7 +137,7 @@ export const Dashboard = () => {
 						</div>
 						<div className="grid grid-cols-4 gap-3 mt-5 max-sm:grid-cols-2">
 							{currentUser?.boards
-								.filter((board) => board.is_starred)
+								.filter((board) => board.type === "starred")
 								.map((board) => (
 									<DashboardCartItem
 										key={board.id}

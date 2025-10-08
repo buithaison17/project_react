@@ -5,6 +5,7 @@ import { Dashboard } from "../pages/Dashboard";
 import { Board } from "../pages/Board";
 import { MainBoard } from "../components/MainBoard";
 import { StarredBoard } from "../pages/StarredBoard";
+import { CloseBoard } from "../pages/CloseBoard";
 
 export const router = createBrowserRouter([
 	{ path: "/register", element: <RegisterPage></RegisterPage> },
@@ -23,6 +24,16 @@ export const router = createBrowserRouter([
 	{
 		path: "/starred-board",
 		element: <StarredBoard></StarredBoard>,
+		children: [
+			{
+				path: ":id",
+				element: <MainBoard></MainBoard>,
+			},
+		],
+	},
+	{
+		path: "/close-board",
+		element: <CloseBoard></CloseBoard>,
 		children: [
 			{
 				path: ":id",

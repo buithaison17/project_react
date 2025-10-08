@@ -8,12 +8,13 @@ import type { AppDispatch, RootState } from "../store/store";
 import { useEffect } from "react";
 import { fetchData } from "../store/usersReducer";
 import { useNavigate } from "react-router-dom";
+import type { Board, Type } from "../utils/type";
 
 interface PropsType {
-	isStarred: boolean;
+	type: Type;
 }
 
-export const SidebarBoard = ({ isStarred }: PropsType) => {
+export const SidebarBoard = ({ type }: PropsType) => {
 	const { users, currentUserId } = useSelector(
 		(state: RootState) => state.usersReducer
 	);
@@ -23,6 +24,20 @@ export const SidebarBoard = ({ isStarred }: PropsType) => {
 		dispatch(fetchData());
 	}, [dispatch]);
 	const currentUser = users.find((u) => u.id === currentUserId);
+	const handleNagative = (board: Board): void => {
+		switch (board.type) {
+			case "normal":
+				navigate(`/board/${board.id}`);
+				return;
+			case "starred":
+				navigate(`/starred-board/${board.id}`);
+				return;
+			case "close":
+				console.log("123");
+				navigate(`/close-board/${board.id}`);
+				return;
+		}
+	};
 	return (
 		<div className="w-[240px] bg-[#F8F9FA]">
 			<div className="flex flex-col gap-3 px-3 py-6 border-b border-b-gray-300">
@@ -41,7 +56,10 @@ export const SidebarBoard = ({ isStarred }: PropsType) => {
 					<StarBorderIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Starred Boards</div>
 				</div>
-				<div className="flex gap-2 items-center cursor-pointer">
+				<div
+					onClick={() => navigate("/close-board")}
+					className="flex gap-2 items-center cursor-pointer"
+				>
 					<ClearOutlinedIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Closed Boards</div>
 				</div>
@@ -53,18 +71,12 @@ export const SidebarBoard = ({ isStarred }: PropsType) => {
 				</div>
 				<div className="flex flex-col">
 					{currentUser?.boards
-						.filter((board) => board.is_starred === isStarred)
+						.filter((board) => board.type === type)
 						.map((board) => (
 							<SidebarBoardItem
 								key={board.id}
 								board={board}
-								onClick={() => {
-									if (isStarred) {
-										navigate(`/starred-board/${board.id}`);
-									} else {
-										navigate(`/board/${board.id}`);
-									}
-								}}
+								onClick={() => handleNagative(board)}
 							></SidebarBoardItem>
 						))}
 				</div>
