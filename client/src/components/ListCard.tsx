@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import { useParams } from "react-router-dom";
 import { addBoard, fetchData } from "../store/usersReducer";
+import { ModalDelete } from "./ModalDelete";
 
 interface PropsType {
 	list: List;
@@ -25,6 +26,8 @@ export const ListCard = ({ list }: PropsType) => {
 	}, [dispatch]);
 	const currentUser = users.find((user) => user.id === currentUserId);
 	const [isAddTask, setIsAddTask] = useState(false);
+	const [isEdit, setIsEdit] = useState<null | List>(null);
+	const [isDelete, setIsDelete] = useState("");
 	const handleOpenAddCart = (): void => {
 		setIsAddTask(true);
 	};
@@ -69,10 +72,82 @@ export const ListCard = ({ list }: PropsType) => {
 			handleCloseAddCart();
 		}
 	};
+	const handleOpenEditList = (list: List): void => {
+		setIsEdit(list);
+		setInput(list.title);
+	};
+	const handleCloseEditList = (): void => {
+		setIsEdit(null);
+		setInput("");
+	};
+	const onEdit = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+		if (e.key !== "Enter") return;
+		if (!input.trim()) return;
+		if (!isEdit) return;
+		if (!currentUser) return;
+		const updates: User = {
+			...currentUser,
+			boards: currentUser.boards.map((board) =>
+				board.id === id
+					? {
+							...board,
+							list: board.list.map((list) =>
+								list.id === isEdit.id
+									? {
+											...list,
+											title: input.trim(),
+									  }
+									: list
+							),
+					  }
+					: board
+			),
+		};
+		dispatch(addBoard(updates));
+		handleCloseEditList();
+	};
+	const handleOpenDeleteList = (id: string): void => {
+		setIsDelete(id);
+	};
+	const handleCloseDeleteList = (): void => {
+		setIsDelete("");
+	};
+	const onDelete = (): void => {
+		if (!currentUser) return;
+		const updates: User = {
+			...currentUser,
+			boards: currentUser.boards.map((board) =>
+				board.id === id
+					? {
+							...board,
+							list: board.list.filter((list) => list.id !== isDelete),
+					  }
+					: board
+			),
+		};
+		dispatch(addBoard(updates));
+		handleCloseDeleteList();
+	};
 	return (
 		<div className="bg-[#F1F2F4] rounded-md p-3">
 			<div className="flex items-center justify-between">
-				<div className="text-[14px] text-[#172B4D] font-bold">{list.title}</div>
+				{!isEdit && (
+					<div
+						onClick={() => handleOpenEditList(list)}
+						className="text-[14px] text-[#172B4D] font-bold flex-1"
+					>
+						{list.title}
+					</div>
+				)}
+				{isEdit && (
+					<input
+						onKeyDown={onEdit}
+						onChange={handleInput}
+						value={input}
+						type="text"
+						className="w-[220px] h-[32px] border border-[#8590A2] px-3 rounded hover:border-blue-500 focus:border-blue-500 outline-none"
+					/>
+				)}
 				<MoreHorizIcon fontSize="small"></MoreHorizIcon>
 			</div>
 			<div className="mt-3 flex flex-col gap-1">
@@ -103,6 +178,7 @@ export const ListCard = ({ list }: PropsType) => {
 						</div>
 					</div>
 					<img
+						onClick={() => handleOpenDeleteList(list.id)}
 						src={Frame}
 						className="w-[16px] h-[16px] object-cover object-center"
 						alt=""
@@ -130,6 +206,9 @@ export const ListCard = ({ list }: PropsType) => {
 						</div>
 					</div>
 				</div>
+			)}
+			{isDelete && (
+				<ModalDelete onDelete={onDelete} handleClose={handleCloseDeleteList}></ModalDelete>
 			)}
 		</div>
 	);
