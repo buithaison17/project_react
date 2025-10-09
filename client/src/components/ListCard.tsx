@@ -10,6 +10,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import { useParams } from "react-router-dom";
 import { addBoard, fetchData } from "../store/usersReducer";
 import { ModalDelete } from "./ModalDelete";
+import { ModalTaskDetail } from "./ModalTaskDetail";
 
 interface PropsType {
 	list: List;
@@ -32,6 +33,11 @@ export const ListCard = ({ list }: PropsType) => {
 		task: Task;
 	}>(null);
 	const [isDelete, setIsDelete] = useState("");
+	const [isDeleteTask, setIsDeleteTask] = useState<{
+		list: List;
+		task: Task;
+	} | null>(null);
+	const [input, setInput] = useState("");
 	const handleOpenAddCart = (): void => {
 		setIsAddTask(true);
 	};
@@ -39,7 +45,6 @@ export const ListCard = ({ list }: PropsType) => {
 		setIsAddTask(false);
 		setInput("");
 	};
-	const [input, setInput] = useState("");
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		setInput(e.target.value);
 	};
@@ -132,45 +137,7 @@ export const ListCard = ({ list }: PropsType) => {
 		dispatch(addBoard(updates));
 		handleCloseDeleteList();
 	};
-	const handleOpenEditTask = (task: Task, list: List): void => {
-		setIsEditTask({ ...isEditTask, task: task, list: list });
-		setInput(task.title);
-	};
-	const handleCloseEditTask = (): void => {
-		setIsEditTask(null);
-		setInput("");
-	};
-	const onEditTask = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-		if (e.key !== "Enter") return;
-		if (!input.trim()) return;
-		if (!currentUser) return;
-		if (!isEditTask) return;
-		const taskUpdates: Task = {
-			...isEditTask?.task,
-			title: input.trim(),
-		};
-		const listUpdates: List = {
-			...isEditTask.list,
-			tasks: list.tasks.map((task) =>
-				task.id === isEditTask.task.id ? taskUpdates : task
-			),
-		};
-		const updates: User = {
-			...currentUser,
-			boards: currentUser.boards.map((board) =>
-				board.id === id
-					? {
-							...board,
-							list: board.list.map((list) =>
-								list.id === isEditTask.list.id ? listUpdates : list
-							),
-					  }
-					: board
-			),
-		};
-		dispatch(addBoard(updates));
-		handleCloseEditTask();
-	};
+
 	const toggleTaskStatus = (list: List, task: Task): void => {
 		if (!currentUser) return;
 		const taskUpdates: Task = {
@@ -196,6 +163,51 @@ export const ListCard = ({ list }: PropsType) => {
 		};
 		dispatch(addBoard(updates));
 	};
+	const handleOpenEditTask = (list: List, task: Task): void => {
+		setIsEditTask({ ...isEditTask, task: task, list: list });
+	};
+	const handleCloseEditTask = (): void => {
+		setIsEditTask(null);
+	};
+	const handleOpenDeleteTask = (list: List, task: Task): void => {
+		setIsDeleteTask({ ...isDeleteTask, list: list, task: task });
+		setIsEditTask(null);
+	};
+	const handleCloseDeleteTask = (): void => {
+		setIsEditTask({
+			...isEditTask,
+			list: isDeleteTask!.list,
+			task: isDeleteTask!.task,
+		});
+		setIsDeleteTask(null);
+	};
+	const onDeleteTask = (): void => {
+		if (!currentUser) return;
+		if (!isDeleteTask?.list) return;
+		const listUpdates: List = {
+			...isDeleteTask.list,
+			tasks: isDeleteTask.list.tasks.filter(
+				(task) => task.id !== isDeleteTask.task.id
+			),
+		};
+		const updates: User = {
+			...currentUser,
+			boards: currentUser.boards.map((board) =>
+				board.id === id
+					? {
+							...board,
+							list: board.list.map((item) =>
+								item.id === isDeleteTask.list.id ? listUpdates : item
+							),
+					  }
+					: board
+			),
+		};
+		dispatch(addBoard(updates));
+		handleCloseDeleteTask();
+		handleCloseEditTask();
+	};
+
 	return (
 		<div className="bg-[#F1F2F4] rounded-md p-3">
 			<div className="flex items-center justify-between">
@@ -221,41 +233,29 @@ export const ListCard = ({ list }: PropsType) => {
 				</div>
 			</div>
 			<div className="mt-3 flex flex-col gap-1">
-				{list.tasks.map((task) =>
-					isEditTask?.task !== task ? (
-						<div
-							key={task.id}
-							className="flex gap-1 items-center bg-white px-2 py-1 shadow rounded-md"
-						>
-							<div onClick={() => toggleTaskStatus(list, task)}>
-								<CheckCircleIcon
-									className={`${
-										task.status === "success"
-											? "text-green-500"
-											: "text-gray-500"
-									}`}
-									fontSize="small"
-								></CheckCircleIcon>
-							</div>
-							<div
-								onClick={() => handleOpenEditTask(task, list)}
-								className={`flex-1 ${
-									task.status === "success" ? "text-gray-400" : ""
+				{list.tasks.map((task) => (
+					<div
+						key={task.id}
+						className="flex gap-1 items-center bg-white px-2 py-1 shadow rounded-md"
+					>
+						<div onClick={() => toggleTaskStatus(list, task)}>
+							<CheckCircleIcon
+								className={`${
+									task.status === "success" ? "text-green-500" : "text-gray-500"
 								}`}
-							>
-								{task.title}
-							</div>
+								fontSize="small"
+							></CheckCircleIcon>
 						</div>
-					) : (
-						<input
-							value={input}
-							onChange={handleInput}
-							onKeyDown={onEditTask}
-							type="text"
-							className="border rounded px-3 py-1 hover:border-blue-500 outline-none focus:border-blue-500"
-						></input>
-					)
-				)}
+						<div
+							onClick={() => handleOpenEditTask(list, task)}
+							className={`flex-1 ${
+								task.status === "success" ? "text-gray-400" : ""
+							}`}
+						>
+							{task.title}
+						</div>
+					</div>
+				))}
 			</div>
 			{!isAddTask && (
 				<div className="mt-4 flex justify-between items-center">
@@ -280,7 +280,7 @@ export const ListCard = ({ list }: PropsType) => {
 				<div className="flex flex-col gap-2">
 					<input
 						type="text"
-						className="h-[56px] rounded-lg shadow w-full p-2 text-[#626F86] text-[14px] border hover:border-blue-500 focus:border-blue-500 focus:outline-none"
+						className="mt-1 h-[56px] rounded-lg shadow w-full p-2 text-[14px] border hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 						placeholder="Enter a title or paste a link"
 						value={input}
 						onChange={handleInput}
@@ -304,7 +304,20 @@ export const ListCard = ({ list }: PropsType) => {
 					handleClose={handleCloseDeleteList}
 				></ModalDelete>
 			)}
-			{/* <ModalTaskDetail></ModalTaskDetail> */}
+			{isEditTask && (
+				<ModalTaskDetail
+					list={isEditTask.list}
+					task={isEditTask.task}
+					onClose={handleCloseEditTask}
+					handleDelete={handleOpenDeleteTask}
+				></ModalTaskDetail>
+			)}
+			{isDeleteTask && (
+				<ModalDelete
+					handleClose={handleCloseDeleteTask}
+					onDelete={onDeleteTask}
+				></ModalDelete>
+			)}
 		</div>
 	);
 };
