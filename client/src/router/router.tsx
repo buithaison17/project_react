@@ -6,6 +6,7 @@ import { Board } from "../pages/Board";
 import { MainBoard } from "../components/MainBoard";
 import { StarredBoard } from "../pages/StarredBoard";
 import { CloseBoard } from "../pages/CloseBoard";
+import PrivateRouter from "../components/PrivateRoute";
 
 export const router = createBrowserRouter([
 	{
@@ -14,10 +15,21 @@ export const router = createBrowserRouter([
 	},
 	{ path: "/register", element: <RegisterPage></RegisterPage> },
 	{ path: "/login", element: <LoginPage></LoginPage> },
-	{ path: "/dashboard", element: <Dashboard></Dashboard> },
+	{
+		path: "/dashboard",
+		element: (
+			<PrivateRouter>
+				<Dashboard></Dashboard>
+			</PrivateRouter>
+		),
+	},
 	{
 		path: `/board`,
-		element: <Board></Board>,
+		element: (
+			<PrivateRouter>
+				<Board></Board>
+			</PrivateRouter>
+		),
 		children: [
 			{
 				path: ":id",
@@ -27,7 +39,11 @@ export const router = createBrowserRouter([
 	},
 	{
 		path: "/starred-board",
-		element: <StarredBoard></StarredBoard>,
+		element: (
+			<PrivateRouter>
+				<StarredBoard></StarredBoard>
+			</PrivateRouter>
+		),
 		children: [
 			{
 				path: ":id",
@@ -37,7 +53,11 @@ export const router = createBrowserRouter([
 	},
 	{
 		path: "/close-board",
-		element: <CloseBoard></CloseBoard>,
+		element: (
+			<PrivateRouter>
+				<CloseBoard></CloseBoard>
+			</PrivateRouter>
+		),
 		children: [
 			{
 				path: ":id",
