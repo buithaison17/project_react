@@ -1,12 +1,38 @@
 {
-	"users": [
-		{
-			"id": "815984",
-			"username": "sonbui@gmail.com",
-			"email": "sonbui@gmail.com",
-			"password": "sonbui@gmail.com",
-			"created_at": "2025-10-7 20:0",
-			"boards": []
-		}
-	]
+  "users": [
+    {
+      "id": "570156",
+      "username": "sonbui@gmail.com",
+      "email": "sonbui@gmail.com",
+      "password": "sonbui@gmail.com",
+      "created_at": "2025-10-09 07:04",
+      "boards": [
+        {
+          "id": "816825",
+          "title": "1",
+          "description": "",
+          "created_at": "2025-10-09 07:40",
+          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378225/m2zskmrawqpvxnvsuetr.jpg",
+          "type": "normal",
+          "list": [
+            {
+              "id": "759401",
+              "title": "12",
+              "created_at": "2025-10-09 07:42",
+              "tasks": [
+                {
+                  "id": "834437",
+                  "title": "sơn bùi",
+                  "status": "success",
+                  "due_date": "",
+                  "description": "",
+                  "tag": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

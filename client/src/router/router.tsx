@@ -8,6 +8,10 @@ import { StarredBoard } from "../pages/StarredBoard";
 import { CloseBoard } from "../pages/CloseBoard";
 
 export const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <LoginPage></LoginPage>,
+	},
 	{ path: "/register", element: <RegisterPage></RegisterPage> },
 	{ path: "/login", element: <LoginPage></LoginPage> },
 	{ path: "/dashboard", element: <Dashboard></Dashboard> },

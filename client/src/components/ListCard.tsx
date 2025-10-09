@@ -27,6 +27,10 @@ export const ListCard = ({ list }: PropsType) => {
 	const currentUser = users.find((user) => user.id === currentUserId);
 	const [isAddTask, setIsAddTask] = useState(false);
 	const [isEdit, setIsEdit] = useState<null | List>(null);
+	const [isEditTask, setIsEditTask] = useState<null | {
+		list: List;
+		task: Task;
+	}>(null);
 	const [isDelete, setIsDelete] = useState("");
 	const handleOpenAddCart = (): void => {
 		setIsAddTask(true);
@@ -80,7 +84,7 @@ export const ListCard = ({ list }: PropsType) => {
 		setIsEdit(null);
 		setInput("");
 	};
-	const onEdit = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+	const onEditList = (e: React.KeyboardEvent<HTMLInputElement>): void => {
 		if (e.key !== "Enter") return;
 		if (!input.trim()) return;
 		if (!isEdit) return;
@@ -128,6 +132,70 @@ export const ListCard = ({ list }: PropsType) => {
 		dispatch(addBoard(updates));
 		handleCloseDeleteList();
 	};
+	const handleOpenEditTask = (task: Task, list: List): void => {
+		setIsEditTask({ ...isEditTask, task: task, list: list });
+		setInput(task.title);
+	};
+	const handleCloseEditTask = (): void => {
+		setIsEditTask(null);
+		setInput("");
+	};
+	const onEditTask = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+		if (e.key !== "Enter") return;
+		if (!input.trim()) return;
+		if (!currentUser) return;
+		if (!isEditTask) return;
+		const taskUpdates: Task = {
+			...isEditTask?.task,
+			title: input.trim(),
+		};
+		const listUpdates: List = {
+			...isEditTask.list,
+			tasks: list.tasks.map((task) =>
+				task.id === isEditTask.task.id ? taskUpdates : task
+			),
+		};
+		const updates: User = {
+			...currentUser,
+			boards: currentUser.boards.map((board) =>
+				board.id === id
+					? {
+							...board,
+							list: board.list.map((list) =>
+								list.id === isEditTask.list.id ? listUpdates : list
+							),
+					  }
+					: board
+			),
+		};
+		dispatch(addBoard(updates));
+		handleCloseEditTask();
+	};
+	const toggleTaskStatus = (list: List, task: Task): void => {
+		if (!currentUser) return;
+		const taskUpdates: Task = {
+			...task,
+			status: task.status === "pending" ? "success" : "pending",
+		};
+		const listUpdates: List = {
+			...list,
+			tasks: list.tasks.map((t) => (t.id === task.id ? taskUpdates : task)),
+		};
+		const updates: User = {
+			...currentUser,
+			boards: currentUser.boards.map((board) =>
+				board.id === id
+					? {
+							...board,
+							list: board.list.map((item) =>
+								item.id === list.id ? listUpdates : list
+							),
+					  }
+					: board
+			),
+		};
+		dispatch(addBoard(updates));
+	};
 	return (
 		<div className="bg-[#F1F2F4] rounded-md p-3">
 			<div className="flex items-center justify-between">
@@ -141,30 +209,53 @@ export const ListCard = ({ list }: PropsType) => {
 				)}
 				{isEdit && (
 					<input
-						onKeyDown={onEdit}
+						onKeyDown={onEditList}
 						onChange={handleInput}
 						value={input}
 						type="text"
 						className="w-[220px] h-[32px] border border-[#8590A2] px-3 rounded hover:border-blue-500 focus:border-blue-500 outline-none"
 					/>
 				)}
-				<MoreHorizIcon fontSize="small"></MoreHorizIcon>
+				<div className="cursor-pointer">
+					<MoreHorizIcon fontSize="small"></MoreHorizIcon>
+				</div>
 			</div>
 			<div className="mt-3 flex flex-col gap-1">
-				{list.tasks.map((task) => (
-					<div
-						key={task.id}
-						className="flex gap-1 items-center bg-white px-2 py-1 shadow rounded-md"
-					>
-						{task.status === "success" && (
-							<CheckCircleIcon
-								className="text-green-500"
-								fontSize="small"
-							></CheckCircleIcon>
-						)}
-						<div>{task.title}</div>
-					</div>
-				))}
+				{list.tasks.map((task) =>
+					isEditTask?.task !== task ? (
+						<div
+							key={task.id}
+							className="flex gap-1 items-center bg-white px-2 py-1 shadow rounded-md"
+						>
+							<div onClick={() => toggleTaskStatus(list, task)}>
+								<CheckCircleIcon
+									className={`${
+										task.status === "success"
+											? "text-green-500"
+											: "text-gray-500"
+									}`}
+									fontSize="small"
+								></CheckCircleIcon>
+							</div>
+							<div
+								onClick={() => handleOpenEditTask(task, list)}
+								className={`flex-1 ${
+									task.status === "success" ? "text-gray-400" : ""
+								}`}
+							>
+								{task.title}
+							</div>
+						</div>
+					) : (
+						<input
+							value={input}
+							onChange={handleInput}
+							onKeyDown={onEditTask}
+							type="text"
+							className="border rounded px-3 py-1 hover:border-blue-500 outline-none focus:border-blue-500"
+						></input>
+					)
+				)}
 			</div>
 			{!isAddTask && (
 				<div className="mt-4 flex justify-between items-center">
@@ -208,8 +299,12 @@ export const ListCard = ({ list }: PropsType) => {
 				</div>
 			)}
 			{isDelete && (
-				<ModalDelete onDelete={onDelete} handleClose={handleCloseDeleteList}></ModalDelete>
+				<ModalDelete
+					onDelete={onDelete}
+					handleClose={handleCloseDeleteList}
+				></ModalDelete>
 			)}
+			{/* <ModalTaskDetail></ModalTaskDetail> */}
 		</div>
 	);
 };
