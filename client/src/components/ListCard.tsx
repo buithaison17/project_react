@@ -179,7 +179,7 @@ export const ListCard = ({ list }: PropsType) => {
 		};
 		const listUpdates: List = {
 			...list,
-			tasks: list.tasks.map((t) => (t.id === task.id ? taskUpdates : task)),
+			tasks: list.tasks.map((t) => (t.id === task.id ? taskUpdates : t)),
 		};
 		const updates: User = {
 			...currentUser,
@@ -188,7 +188,7 @@ export const ListCard = ({ list }: PropsType) => {
 					? {
 							...board,
 							list: board.list.map((item) =>
-								item.id === list.id ? listUpdates : list
+								item.id === list.id ? listUpdates : item
 							),
 					  }
 					: board

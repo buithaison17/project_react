@@ -6,14 +6,22 @@
       "email": "sonbui@gmail.com",
       "password": "sonbui@gmail.com",
       "created_at": "2025-10-09 07:04",
+      "boards": []
+    },
+    {
+      "id": "130312",
+      "username": "sonbui@gmail.com",
+      "email": "sonbui1@gmail.com",
+      "password": "sonbui@gmail.com",
+      "created_at": "2025-10-09 09:39",
       "boards": [
         {
-          "id": "586627",
-          "title": "1",
+          "id": "425192",
+          "title": "12131",
           "description": "",
-          "created_at": "2025-10-09 08:35",
+          "created_at": "2025-10-09 09:41",
           "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
-          "type": "normal",
+          "type": "close",
           "list": []
         }
       ]
