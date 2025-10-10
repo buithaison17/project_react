@@ -3,12 +3,23 @@ import OverdueIcon from "../assets/images/overdue-icon.png";
 import NoDatesIcon from "../assets/images/no-dates-icon.png";
 import DueNextDayIcon from "../assets/images/due-nextday-icon.png";
 import NoLabelsIcon from "../assets/images/no-labels-icon.png";
+import type React from "react";
 
 interface PropsType {
 	toggleFilter: () => void;
+	filterInput: {
+		search: string;
+		status: string;
+		dueDate: string;
+	};
+	handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const FilterDropdown = ({ toggleFilter }: PropsType) => {
+export const FilterDropdown = ({
+	toggleFilter,
+	handleInput,
+	filterInput,
+}: PropsType) => {
 	return (
 		<div className="absolute flex flex-col bg-white overflow-hidden w-[384px] rounded-lg shadow top-6 right-0 p-3">
 			<div className="flex justify-between items-center">
@@ -25,6 +36,9 @@ export const FilterDropdown = ({ toggleFilter }: PropsType) => {
 					type="text"
 					className="h-[36px] border rounded px-3 py-2 hover:border-blue-500 focus:border-blue-500 focus:outline-none"
 					placeholder="Enter a keyword…"
+					name="search"
+					value={filterInput.search}
+					onChange={handleInput}
 				/>
 				<div className="text-[11px] text-[#44546F]">Search cards,</div>
 			</div>
@@ -37,6 +51,10 @@ export const FilterDropdown = ({ toggleFilter }: PropsType) => {
 						type="checkbox"
 						id="marked-as-complete"
 						className="w-[16px] h-[16px]"
+						name="status"
+						value="success"
+						checked={filterInput.status === "success"}
+						onChange={handleInput}
 					/>
 					<label
 						htmlFor="marked-as-complete"
@@ -50,6 +68,10 @@ export const FilterDropdown = ({ toggleFilter }: PropsType) => {
 						type="checkbox"
 						id="not-marked-as-complete"
 						className="w-[16px] h-[16px]"
+						name="status"
+						value="pending"
+						checked={filterInput.status === "pending"}
+						onChange={handleInput}
 					/>
 					<label
 						htmlFor="not-marked-as-complete"

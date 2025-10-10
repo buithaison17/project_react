@@ -1,103 +1,12 @@
 {
-  "users": [
-    {
-      "id": "570156",
-      "username": "sonbui@gmail.com",
-      "email": "sonbui@gmail.com",
-      "password": "sonbui@gmail.com",
-      "created_at": "2025-10-09 07:04",
-      "boards": [
-        {
-          "id": "885271",
-          "title": "sơn bùi",
-          "description": "",
-          "created_at": "2025-10-10 07:19",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
-          "type": "close",
-          "list": [
-            {
-              "id": "266759",
-              "title": "sơn bùi",
-              "created_at": "2025-10-10 09:40",
-              "tasks": [
-                {
-                  "id": "308158",
-                  "title": "ưqwqw",
-                  "status": "pending",
-                  "due_date": "",
-                  "description": "",
-                  "tag": []
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "887021",
-          "title": "121",
-          "description": "",
-          "created_at": "2025-10-10 09:28",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
-          "type": "close",
-          "list": [
-            {
-              "id": "945462",
-              "title": "sơn",
-              "created_at": "2025-10-10 09:28",
-              "tasks": [
-                {
-                  "id": "451463",
-                  "title": "sơn",
-                  "status": "pending",
-                  "due_date": "",
-                  "description": "",
-                  "tag": []
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "918751",
-          "title": "2",
-          "description": "",
-          "created_at": "2025-10-10 09:47",
-          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378161/jtoihhg4izrph1rcrlxq.jpg",
-          "type": "normal",
-          "list": [
-            {
-              "id": "467764",
-              "title": "sáa",
-              "created_at": "2025-10-10 09:55",
-              "tasks": [
-                {
-                  "id": "922493",
-                  "title": "ưqwqqwq",
-                  "status": "pending",
-                  "due_date": "",
-                  "description": "",
-                  "tag": []
-                }
-              ]
-            },
-            {
-              "id": "186866",
-              "title": "sâsa",
-              "created_at": "2025-10-10 09:57",
-              "tasks": [
-                {
-                  "id": "645203",
-                  "title": "qưqwqw",
-                  "status": "pending",
-                  "due_date": "",
-                  "description": "",
-                  "tag": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	"users": [
+		{
+			"id": "570156",
+			"username": "sonbui@gmail.com",
+			"email": "sonbui@gmail.com",
+			"password": "sonbui@gmail.com",
+			"created_at": "2025-10-09 07:04",
+			"boards": []
+		}
+	]
 }

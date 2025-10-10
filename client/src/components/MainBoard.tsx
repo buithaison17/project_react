@@ -8,7 +8,7 @@ import { ListCard } from "../components/ListCard";
 import { CardAddList } from "./CardAddList";
 import { ModalDelete } from "./ModalDelete";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import { addBoard, fetchData } from "../store/usersReducer";
@@ -21,15 +21,18 @@ export const MainBoard = () => {
 	);
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
-
 	useEffect(() => {
 		dispatch(fetchData());
 	}, [dispatch]);
-
 	const { id } = useParams();
 	const currentUser = users.find((user) => user.id === currentUserId);
 	const currentBoard = currentUser?.boards.find((board) => board.id === id);
 	const [openFilter, setOpenFilter] = useState(false);
+	const [filterInput, setFilterInput] = useState({
+		search: "",
+		status: "",
+		dueDate: "",
+	});
 	const handleToggleFilter = (): void => setOpenFilter(!openFilter);
 	const [closeBoard, setCloseBoard] = useState(false);
 	const handleCloseBoard = (): void => setCloseBoard(!closeBoard);
@@ -44,7 +47,6 @@ export const MainBoard = () => {
 		toast.success("Đóng board thành công");
 		dispatch(addBoard(updatedUser));
 		handleCloseBoard();
-
 		switch (temp.type) {
 			case "normal":
 				navigate("/board");
@@ -56,9 +58,7 @@ export const MainBoard = () => {
 	};
 	const onStarredBoard = (): void => {
 		if (!currentUser || !currentBoard) return;
-
 		const newType = currentBoard.type === "starred" ? "normal" : "starred";
-
 		const updatedBoard: Board = {
 			...currentBoard,
 			type: newType,
@@ -79,7 +79,33 @@ export const MainBoard = () => {
 			navigate(`/board/${currentBoard.id}`);
 		}
 	};
-
+	const handleFilterInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		const { name, value } = e.target;
+		if (name === "search") {
+			setFilterInput({ ...filterInput, search: value });
+		} else if (name === "status") {
+			setFilterInput((prev) => ({
+				...prev,
+				status: prev.status === value ? "" : value,
+			}));
+		}
+	};
+	const filterList = useMemo(() => {
+		const { search, status } = filterInput;
+		if (!currentBoard) return [];
+		if (!search.trim() && !status.trim()) return currentBoard.list;
+		const lists = currentBoard.list;
+		let filter = lists.filter((list) =>
+			list.title.toLowerCase().includes(search.toLowerCase().trim())
+		);
+		if (status) {
+			filter = filter.map((list) => ({
+				...list,
+				tasks: list.tasks.filter((task) => task.status === status),
+			}));
+		}
+		return filter;
+	}, [currentBoard, filterInput]);
 	return (
 		<div className="flex-1 bg-white">
 			<ToastContainer
@@ -95,7 +121,6 @@ export const MainBoard = () => {
 				theme="colored"
 				transition={Bounce}
 			/>
-
 			{/* Header */}
 			<div className="bg-[#F1F2F4] px-4 py-3 flex justify-between items-center">
 				<div className="flex items-center gap-3">
@@ -146,13 +171,19 @@ export const MainBoard = () => {
 							Filters
 						</div>
 					</div>
-					{openFilter && <FilterDropdown toggleFilter={handleToggleFilter} />}
+					{openFilter && (
+						<FilterDropdown
+							filterInput={filterInput}
+							handleInput={handleFilterInput}
+							toggleFilter={handleToggleFilter}
+						/>
+					)}
 				</div>
 			</div>
 
 			{/* Nội dung các list */}
 			<div className="grid grid-cols-4 p-3 gap-3 items-start">
-				{currentBoard?.list.map((list) => (
+				{filterList.map((list) => (
 					<ListCard key={list.id} list={list} />
 				))}
 				<CardAddList />
