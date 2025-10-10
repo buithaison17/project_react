@@ -13,7 +13,7 @@ export interface Task {
 	description: string;
 	status: Status;
 	due_date: string;
-	tag: [];
+	tag: Tag[];
 }
 
 export interface List {

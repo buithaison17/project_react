@@ -16,6 +16,7 @@ interface PropsType {
 	task: Task;
 	onClose: () => void;
 	handleDelete: (list: List, task: Task) => void;
+	handleLabel: (list: List, task: Task) => void;
 }
 
 export const ModalTaskDetail = ({
@@ -23,6 +24,7 @@ export const ModalTaskDetail = ({
 	task,
 	onClose,
 	handleDelete,
+	handleLabel,
 }: PropsType) => {
 	const { users, currentUserId } = useSelector(
 		(state: RootState) => state.usersReducer
@@ -107,7 +109,10 @@ export const ModalTaskDetail = ({
 						</div>
 					</div>
 					<div className="flex flex-col gap-2">
-						<div className="flex gap-1 items-center bg-[#091E420F] py-2 pl-3 w-[168px] rounded">
+						<div
+							onClick={() => handleLabel(list, task)}
+							className="flex gap-1 items-center bg-[#091E420F] py-2 pl-3 w-[168px] rounded"
+						>
 							<img src={LabelIcon} className="w-[16px] h-[16px]" alt="" />
 							<div className="text-[14px] text-[#172B4D] font-medium">
 								Labels

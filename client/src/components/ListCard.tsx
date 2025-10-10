@@ -2,7 +2,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AddIcon from "@mui/icons-material/Add";
 import Frame from "../assets/images/frame.png";
-import type { List, Task, User } from "../utils/type";
+import type { List, Tag, Task, User } from "../utils/type";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,8 @@ import { useParams } from "react-router-dom";
 import { addBoard, fetchData } from "../store/usersReducer";
 import { ModalDelete } from "./ModalDelete";
 import { ModalTaskDetail } from "./ModalTaskDetail";
+import { ModalLabel } from "./ModalLabel";
+import { ModalCreateLabel } from "./ModalCreateLabel";
 
 interface PropsType {
 	list: List;
@@ -36,6 +38,18 @@ export const ListCard = ({ list }: PropsType) => {
 	const [isDeleteTask, setIsDeleteTask] = useState<{
 		list: List;
 		task: Task;
+	} | null>(null);
+	const [openLabelTask, setOpenLabelTask] = useState<{
+		list: List;
+		task: Task;
+	} | null>(null);
+	const [addLabel, setAddLabel] = useState<{ list: List; task: Task } | null>(
+		null
+	);
+	const [editLabel, setEditLabel] = useState<{
+		list: List;
+		task: Task;
+		tag: Tag;
 	} | null>(null);
 	const [input, setInput] = useState("");
 	const handleOpenAddCart = (): void => {
@@ -207,7 +221,40 @@ export const ListCard = ({ list }: PropsType) => {
 		handleCloseDeleteTask();
 		handleCloseEditTask();
 	};
-
+	const handleOpenLabelTask = (list: List, task: Task): void => {
+		setOpenLabelTask({
+			...isEditTask,
+			list: list,
+			task: task,
+		});
+		setIsEditTask(null);
+	};
+	const handleCloseLabelTask = (): void => {
+		setIsEditTask({
+			...isEditTask,
+			list: openLabelTask!.list,
+			task: openLabelTask!.task,
+		});
+		setOpenLabelTask(null);
+	};
+	const handleOpenAddLabel = (list: List, task: Task): void => {
+		setAddLabel({ ...addLabel, list: list, task: task });
+		setOpenLabelTask(null);
+	};
+	const handleCloseAddLabel = (): void => {
+		if (!currentUser) return;
+		setOpenLabelTask({
+			...openLabelTask,
+			list: (addLabel || editLabel)!.list,
+			task: (addLabel || editLabel)!.task,
+		});
+		setAddLabel(null);
+		setEditLabel(null);
+	};
+	const handleEditLabel = (list: List, task: Task, tag: Tag): void => {
+		setEditLabel({ ...isEdit, list: list, task: task, tag: tag });
+		setOpenLabelTask(null);
+	};
 	return (
 		<div className="bg-[#F1F2F4] rounded-md p-3">
 			<div className="flex items-center justify-between">
@@ -310,6 +357,7 @@ export const ListCard = ({ list }: PropsType) => {
 					task={isEditTask.task}
 					onClose={handleCloseEditTask}
 					handleDelete={handleOpenDeleteTask}
+					handleLabel={handleOpenLabelTask}
 				></ModalTaskDetail>
 			)}
 			{isDeleteTask && (
@@ -317,6 +365,23 @@ export const ListCard = ({ list }: PropsType) => {
 					handleClose={handleCloseDeleteTask}
 					onDelete={onDeleteTask}
 				></ModalDelete>
+			)}
+			{openLabelTask && (
+				<ModalLabel
+					list={openLabelTask.list}
+					task={openLabelTask.task}
+					onClose={handleCloseLabelTask}
+					handleAdd={handleOpenAddLabel}
+					handleEdit={handleEditLabel}
+				></ModalLabel>
+			)}
+			{(addLabel || editLabel) && (
+				<ModalCreateLabel
+					list={(addLabel || editLabel)!.list}
+					task={(addLabel || editLabel)!.task}
+					onClose={handleCloseAddLabel}
+					isEdit={editLabel}
+				></ModalCreateLabel>
 			)}
 		</div>
 	);
