@@ -7,6 +7,7 @@ import { addBoard, fetchData } from "../store/usersReducer";
 import { useParams } from "react-router-dom";
 import type { List, User } from "../utils/type";
 import { getDateNow } from "../utils/getDateNow";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export const CardAddList = () => {
 	const [isAddList, setIsAddList] = useState(false);
@@ -31,7 +32,10 @@ export const CardAddList = () => {
 		setInput(e.target.value);
 	};
 	const onAddList = (): void => {
-		if (!input.trim()) return;
+		if (!input.trim()) {
+			toast.error("Tên danh sách công việc không được để trông");
+			return;
+		}
 		const newList: List = {
 			id: Math.floor(Math.random() * 1000000).toString(),
 			title: input.trim(),
@@ -55,7 +59,7 @@ export const CardAddList = () => {
 		}
 	};
 	return (
-		<>
+		<div>
 			{!isAddList && (
 				<div
 					onClick={handleOpenAddList}
@@ -89,6 +93,19 @@ export const CardAddList = () => {
 					</div>
 				</div>
 			)}
-		</>
+			<ToastContainer
+				position="top-left"
+				autoClose={1200}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="colored"
+				transition={Bounce}
+			/>
+		</div>
 	);
 };

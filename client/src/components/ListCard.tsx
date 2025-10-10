@@ -13,6 +13,7 @@ import { ModalDelete } from "./ModalDelete";
 import { ModalTaskDetail } from "./ModalTaskDetail";
 import { ModalLabel } from "./ModalLabel";
 import { ModalCreateLabel } from "./ModalCreateLabel";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 interface PropsType {
 	list: List;
@@ -63,7 +64,10 @@ export const ListCard = ({ list }: PropsType) => {
 		setInput(e.target.value);
 	};
 	const onAddTask = (idTask: string): void => {
-		if (!input.trim()) return;
+		if (!input.trim()) {
+			toast.error("Tên công việc không được để trống");
+			return;
+		}
 		const newTask: Task = {
 			id: Math.floor(Math.random() * 1000000).toString(),
 			title: input.trim(),
@@ -105,7 +109,10 @@ export const ListCard = ({ list }: PropsType) => {
 	};
 	const onEditList = (e: React.KeyboardEvent<HTMLInputElement>): void => {
 		if (e.key !== "Enter") return;
-		if (!input.trim()) return;
+		if (!input.trim()) {
+			toast.error("Tên công việc không được để trông");
+			return;
+		}
 		if (!isEdit) return;
 		if (!currentUser) return;
 		const updates: User = {
@@ -383,6 +390,19 @@ export const ListCard = ({ list }: PropsType) => {
 					isEdit={editLabel}
 				></ModalCreateLabel>
 			)}
+			<ToastContainer
+				position="top-left"
+				autoClose={1200}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="colored"
+				transition={Bounce}
+			/>
 		</div>
 	);
 };
