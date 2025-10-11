@@ -14,6 +14,7 @@ import { ModalTaskDetail } from "./ModalTaskDetail";
 import { ModalLabel } from "./ModalLabel";
 import { ModalCreateLabel } from "./ModalCreateLabel";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { ModalDateTask } from "./ModalDateTask";
 
 interface PropsType {
 	list: List;
@@ -52,6 +53,9 @@ export const ListCard = ({ list }: PropsType) => {
 		task: Task;
 		tag: Tag;
 	} | null>(null);
+	const [addDate, setAddDate] = useState<{ list: List; task: Task } | null>(
+		null
+	);
 	const [input, setInput] = useState("");
 	const handleOpenAddCart = (): void => {
 		setIsAddTask(true);
@@ -265,6 +269,14 @@ export const ListCard = ({ list }: PropsType) => {
 		setEditLabel({ ...isEdit, list: list, task: task, tag: tag });
 		setOpenLabelTask(null);
 	};
+	const handleAddDate = (list: List, task: Task): void => {
+		setAddDate({ ...addDate, list: list, task: task });
+		setIsEditTask(null);
+	};
+	const handleCloseAddDate = (list: List, task: Task): void => {
+		setAddDate(null);
+		setIsEditTask({ ...isEditTask, list: list, task: task });
+	};
 	return (
 		<div className="bg-[#F1F2F4] rounded-md p-3">
 			<div className="flex items-center justify-between">
@@ -368,6 +380,7 @@ export const ListCard = ({ list }: PropsType) => {
 					onClose={handleCloseEditTask}
 					handleDelete={handleOpenDeleteTask}
 					handleLabel={handleOpenLabelTask}
+					handleDate={handleAddDate}
 				></ModalTaskDetail>
 			)}
 			{isDeleteTask && (
@@ -392,6 +405,13 @@ export const ListCard = ({ list }: PropsType) => {
 					onClose={handleCloseAddLabel}
 					isEdit={editLabel}
 				></ModalCreateLabel>
+			)}
+			{addDate && (
+				<ModalDateTask
+					onClose={handleCloseAddDate}
+					list={addDate.list}
+					task={addDate.task}
+				></ModalDateTask>
 			)}
 			<ToastContainer
 				position="top-left"
