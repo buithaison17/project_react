@@ -1,12 +1,53 @@
 {
-	"users": [
-		{
-			"id": "570156",
-			"username": "sonbui@gmail.com",
-			"email": "sonbui@gmail.com",
-			"password": "sonbui@gmail.com",
-			"created_at": "2025-10-09 07:04",
-			"boards": []
-		}
-	]
+  "users": [
+    {
+      "id": "570156",
+      "username": "sonbui@gmail.com",
+      "email": "sonbui@gmail.com",
+      "password": "sonbui@gmail.com",
+      "created_at": "2025-10-09 07:04",
+      "boards": [
+        {
+          "id": "123623",
+          "title": "1",
+          "description": "",
+          "created_at": "2025-10-11 20:16",
+          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378225/m2zskmrawqpvxnvsuetr.jpg",
+          "type": "normal",
+          "list": [
+            {
+              "id": "85995",
+              "title": "1",
+              "created_at": "2025-10-11 20:16",
+              "tasks": [
+                {
+                  "id": "247885",
+                  "title": "1",
+                  "status": "pending",
+                  "due_date": "2025-10-13",
+                  "description": "",
+                  "tag": []
+                }
+              ]
+            },
+            {
+              "id": "512710",
+              "title": "2",
+              "created_at": "2025-10-11 20:16",
+              "tasks": [
+                {
+                  "id": "930793",
+                  "title": "2",
+                  "status": "pending",
+                  "due_date": "",
+                  "description": "",
+                  "tag": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

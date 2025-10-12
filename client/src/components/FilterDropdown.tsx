@@ -84,7 +84,15 @@ export const FilterDropdown = ({
 			<div className="flex flex-col gap-2 mt-3">
 				<div className="text-[12px] text-[#44546F] font-semibold">Due date</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" id="no-dates" className="w-[16px] h-[16px]" />
+					<input
+						type="checkbox"
+						id="no-dates"
+						name="dueDate"
+						value="noDates"
+						onChange={handleInput}
+						checked={filterInput.dueDate === "noDates"}
+						className="w-[16px] h-[16px]"
+					/>
 					<div className="flex items-center gap-1">
 						<img src={NoDatesIcon} className="w-[24px] h-[24px]" alt="" />
 						<label htmlFor="no-dates" className="text-[14px] text-[#172B4D]">
@@ -93,7 +101,15 @@ export const FilterDropdown = ({
 					</div>
 				</div>
 				<div className="flex gap-6 items-center px-3">
-					<input type="checkbox" id="overdue" className="w-[16px] h-[16px]" />
+					<input
+						type="checkbox"
+						id="overdue"
+						name="dueDate"
+						value="overdue"
+						onChange={handleInput}
+						checked={filterInput.dueDate === "overdue"}
+						className="w-[16px] h-[16px]"
+					/>
 					<div className="flex items-center gap-1">
 						<img src={OverdueIcon} className="w-[24px] h-[24px]" alt="" />
 						<label htmlFor="overdue" className="text-[14px] text-[#172B4D]">
@@ -105,6 +121,10 @@ export const FilterDropdown = ({
 					<input
 						type="checkbox"
 						id="due-in-the-next-day"
+						name="dueDate"
+						value="dueInTheNextDay"
+						checked={filterInput.dueDate === "dueInTheNextDay"}
+						onChange={handleInput}
 						className="w-[16px] h-[16px]"
 					/>
 					<div className="flex items-center gap-1">

@@ -104,7 +104,7 @@ export const ModalDateTask = ({ onClose, task, list }: Props) => {
 			console.log("Ngày bắt đầu không được lớn hơn ngày kết thúc");
 			return;
 		}
-		if (inputDate.dueDate && inputDate.dueDate < today) {
+		if (inputDate.dueDate && inputDate.dueDate <= today) {
 			console.log("Ngày kết thúc không được bé hơn ngày hiện tại");
 			return;
 		}

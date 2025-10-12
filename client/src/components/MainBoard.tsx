@@ -88,12 +88,17 @@ export const MainBoard = () => {
 				...prev,
 				status: prev.status === value ? "" : value,
 			}));
+		} else if (name === "dueDate") {
+			setFilterInput((prev) => ({
+				...prev,
+				dueDate: prev.dueDate === value ? "" : value,
+			}));
 		}
 	};
 	const filterList = useMemo(() => {
-		const { search, status } = filterInput;
+		const { search, status, dueDate } = filterInput;
 		if (!currentBoard) return [];
-		if (!search.trim() && !status.trim()) return currentBoard.list;
+		if (!search.trim() && !status && !dueDate) return currentBoard.list;
 		const lists = currentBoard.list;
 		let filter = lists.filter((list) =>
 			list.title.toLowerCase().includes(search.toLowerCase().trim())
@@ -103,6 +108,38 @@ export const MainBoard = () => {
 				...list,
 				tasks: list.tasks.filter((task) => task.status === status),
 			}));
+		}
+		if (dueDate) {
+			if (dueDate === "noDates") {
+				filter = filter.map((list) => ({
+					...list,
+					tasks: list.tasks.filter((task) => task.due_date === ""),
+				}));
+			} else if (dueDate === "overdue") {
+				const today = new Date();
+				today.setHours(0, 0, 0, 0);
+				filter = filter.map((list) => ({
+					...list,
+					tasks: list.tasks.filter((task) => {
+						const due = new Date(task.due_date);
+						due.setHours(0, 0, 0, 0);
+						return due < today;
+					}),
+				}));
+			} else if (dueDate === "dueInTheNextDay") {
+				const today = new Date();
+				today.setHours(0, 0, 0, 0);
+				const tomorrow = new Date(today);
+				tomorrow.setDate(today.getDate() + 1);
+				filter = filter.map((list) => ({
+					...list,
+					tasks: list.tasks.filter((task) => {
+						const due = new Date(task.due_date);
+						due.setHours(0, 0, 0, 0);
+						return due.getTime() === tomorrow.getTime();
+					}),
+				}));
+			}
 		}
 		return filter;
 	}, [currentBoard, filterInput]);
