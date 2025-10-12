@@ -255,12 +255,12 @@ export const ListCard = ({ list }: PropsType) => {
 		setAddLabel({ ...addLabel, list: list, task: task });
 		setOpenLabelTask(null);
 	};
-	const handleCloseAddLabel = (): void => {
+	const handleCloseAddLabel = (list: List, task: Task): void => {
 		if (!currentUser) return;
 		setOpenLabelTask({
 			...openLabelTask,
-			list: (addLabel || editLabel)!.list,
-			task: (addLabel || editLabel)!.task,
+			list: list,
+			task: task,
 		});
 		setAddLabel(null);
 		setEditLabel(null);
@@ -402,7 +402,7 @@ export const ListCard = ({ list }: PropsType) => {
 				<ModalCreateLabel
 					list={(addLabel || editLabel)!.list}
 					task={(addLabel || editLabel)!.task}
-					onClose={handleCloseAddLabel}
+					onClose={(list, task) => handleCloseAddLabel(list, task)}
 					isEdit={editLabel}
 				></ModalCreateLabel>
 			)}

@@ -45,7 +45,7 @@ const colorRow: ColorItem[] = [
 ];
 
 interface Props {
-	onClose: () => void;
+	onClose: (list: List, task: Task) => void;
 	list: List;
 	task: Task;
 	isEdit: {
@@ -110,6 +110,7 @@ export const ModalCreateLabel = ({ onClose, list, task, isEdit }: Props) => {
 				boards: updatedBoards,
 			};
 			dispatch(addBoard(updatedUser));
+			onClose(updatedList, updatedTask);
 		} else {
 			const tagUpdates: Tag = {
 				...isEdit.tag,
@@ -142,26 +143,26 @@ export const ModalCreateLabel = ({ onClose, list, task, isEdit }: Props) => {
 				),
 			};
 			dispatch(addBoard(updates));
+			onClose(listUpdates, taskUpdates);
 		}
 		setInput("");
 		setColorChoose("");
-		onClose();
 	};
 	return (
 		<div className="fixed inset-0 z-[10] flex justify-center items-center">
 			<div
-				onClick={onClose}
+				onClick={() => onClose(list, task)}
 				className="fixed inset-0 bg-[rgba(0,0,0,0.3)]"
 			></div>
 			<div className="w-[304px] bg-white p-3 rounded-lg z-[20]">
 				<div className="flex justify-between items-center">
-					<div className="cursor-pointer" onClick={onClose}>
+					<div className="cursor-pointer" onClick={() => onClose(list, task)}>
 						<ArrowBackIosNewIcon fontSize="small"></ArrowBackIosNewIcon>
 					</div>
 					<div className="text-[14px] font-semibold text-[#44546F]">
 						{isEdit ? "Edit Lable" : "Create label"}
 					</div>
-					<div className="cursor-pointer" onClick={onClose}>
+					<div className="cursor-pointer" onClick={() => onClose(list, task)}>
 						<CloseIcon fontSize="small"></CloseIcon>
 					</div>
 				</div>

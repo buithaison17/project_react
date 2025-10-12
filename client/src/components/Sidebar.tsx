@@ -16,21 +16,21 @@ export const Sidebar = ({ handleLogout }: PropsType) => {
 			<div className="flex flex-col gap-3 border-b-2 px-4 py-6 border-b-gray-300">
 				<div className="text-[12px]">YOUR WORKSPACES</div>
 				<div
-					onClick={() => navigate("/board")}
+					onClick={() => navigate("board")}
 					className="flex gap-2 items-center cursor-pointer"
 				>
 					<FormatListBulletedIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Boards</div>
 				</div>
 				<div
-					onClick={() => navigate("/starred-board")}
+					onClick={() => navigate("starred-board")}
 					className="flex gap-2 items-center cursor-pointer"
 				>
 					<StarBorderIcon className="text-blue-500" fontSize="small" />
 					<div className="text-blue-500 text-[14px]">Starred Boards</div>
 				</div>
 				<div
-					onClick={() => navigate("/close-board")}
+					onClick={() => navigate("close-board")}
 					className="flex gap-2 items-center cursor-pointer"
 				>
 					<ClearOutlinedIcon className="text-blue-500" fontSize="small" />

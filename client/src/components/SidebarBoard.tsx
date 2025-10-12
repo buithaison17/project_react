@@ -33,7 +33,6 @@ export const SidebarBoard = ({ type }: PropsType) => {
 				navigate(`/starred-board/${board.id}`);
 				return;
 			case "close":
-				console.log("123");
 				navigate(`/close-board/${board.id}`);
 				return;
 		}

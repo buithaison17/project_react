@@ -83,8 +83,13 @@ export const ModalDateTask = ({ onClose, task, list }: Props) => {
 		setInputDate({ ...inputDate, [name]: value ? new Date(value) : null });
 	};
 
-	const formatDate = (value: Date | null): string =>
-		value ? value.toISOString().split("T")[0] : "";
+	const formatDate = (value: Date | null): string => {
+		if (!value) return "";
+		const year = value.getFullYear();
+		const month = String(value.getMonth() + 1).padStart(2, "0");
+		const day = String(value.getDate()).padStart(2, "0");
+		return `${year}-${month}-${day}`;
+	};
 
 	const onRemove = () => {
 		setInputDate({ startDate: null, dueDate: null });

@@ -7,6 +7,8 @@ import { MainBoard } from "../components/MainBoard";
 import { StarredBoard } from "../pages/StarredBoard";
 import { CloseBoard } from "../pages/CloseBoard";
 import PrivateRouter from "../components/PrivateRoute";
+import { MainDasboard } from "../components/MainDasboard";
+import { SecondDashboard } from "../components/SecondDashboard";
 
 export const router = createBrowserRouter([
 	{
@@ -22,6 +24,13 @@ export const router = createBrowserRouter([
 				<Dashboard></Dashboard>
 			</PrivateRouter>
 		),
+		children: [
+			{ index: true, element: <MainDasboard></MainDasboard> },
+			{
+				path: ":typeBoard",
+				element: <SecondDashboard></SecondDashboard>,
+			},
+		],
 	},
 	{
 		path: `/board`,

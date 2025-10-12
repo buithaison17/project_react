@@ -66,14 +66,9 @@ const colorRow: ColorItem[] = [
 interface PropsType {
 	handleClose: () => void;
 	isEdit?: Board | null;
-	isStarred: boolean;
 }
 
-export const ModalAddEditBoard = ({
-	handleClose,
-	isEdit,
-	isStarred,
-}: PropsType) => {
+export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 	const { currentUserId, users } = useSelector(
 		(state: RootState) => state.usersReducer
 	);
@@ -130,7 +125,7 @@ export const ModalAddEditBoard = ({
 				description: "",
 				created_at: getDateNow(),
 				backdrop: image ? image : imageRow[0].image,
-				type: isStarred ? "starred" : "normal",
+				type: "normal",
 				list: [],
 			};
 			const newCurrentUser: User = {
