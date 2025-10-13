@@ -114,7 +114,7 @@ export const ListCard = ({ list }: PropsType) => {
 	const onEditList = (e: React.KeyboardEvent<HTMLInputElement>): void => {
 		if (e.key !== "Enter") return;
 		if (!input.trim()) {
-			toast.error("Tên công việc không được để trông");
+			toast.error("Tên danh sách công việc không được để trông");
 			return;
 		}
 		if (!isEdit) return;

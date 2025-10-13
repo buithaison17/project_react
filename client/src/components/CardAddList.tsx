@@ -33,7 +33,7 @@ export const CardAddList = () => {
 	};
 	const onAddList = (): void => {
 		if (!input.trim()) {
-			toast.error("Tên danh sách công việc không được để trông");
+			toast.error("Tên danh sách công việc không được để trống");
 			return;
 		}
 		const newList: List = {

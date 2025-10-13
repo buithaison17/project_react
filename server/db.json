@@ -6,7 +6,17 @@
       "email": "sonbui@gmail.com",
       "password": "Sonbui@123",
       "created_at": "2025-10-09 07:04",
-      "boards": []
+      "boards": [
+        {
+          "id": "250996",
+          "title": "1",
+          "backdrop": "https://res.cloudinary.com/db4y1dgnp/image/upload/v1759378225/m2zskmrawqpvxnvsuetr.jpg",
+          "list": [],
+          "created_at": "2025-10-13 08:49",
+          "type": "normal",
+          "description": ""
+        }
+      ]
     }
   ]
 }
