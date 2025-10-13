@@ -1,12 +1,7 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import React, { useEffect, useMemo, useState } from "react";
-import type { Board, User } from "../utils/type";
-import { toast } from "react-toastify";
-import { getDateNow } from "../utils/getDateNow";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../store/store";
-import { addBoard, fetchData } from "../store/usersReducer";
+import React, { useEffect, useState } from "react";
+import type { Board } from "../utils/type";
 
 interface ImageItem {
 	image: string;
@@ -65,20 +60,15 @@ const colorRow: ColorItem[] = [
 
 interface PropsType {
 	handleClose: () => void;
+	onAdd: (data: { title: string; backdrop: string }) => void;
 	isEdit?: Board | null;
 }
 
-export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
-	const { currentUserId, users } = useSelector(
-		(state: RootState) => state.usersReducer
-	);
-	const currentUser = useMemo(() => {
-		return users.find((user) => user.id === currentUserId);
-	}, [users, currentUserId]);
-	const dispatch = useDispatch<AppDispatch>();
-	useEffect(() => {
-		dispatch(fetchData());
-	}, [dispatch]);
+export const ModalAddEditBoard = ({
+	handleClose,
+	isEdit,
+	onAdd,
+}: PropsType) => {
 	const [inputState, setInputState] = useState({
 		title: "",
 		color: {
@@ -112,45 +102,7 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 			},
 		});
 	};
-	const onSubmit = (): void => {
-		const { title, image } = inputState;
-		if (!title.trim()) {
-			toast.error("Tiêu đề board không được để trống");
-			return;
-		}
-		if (!isEdit) {
-			const board: Board = {
-				id: Math.floor(Math.random() * 1000000).toString(),
-				title: title.trim(),
-				description: "",
-				created_at: getDateNow(),
-				backdrop: image ? image : imageRow[0].image,
-				type: "normal",
-				list: [],
-			};
-			const newCurrentUser: User = {
-				...currentUser!,
-				boards: [...currentUser!.boards, board],
-			};
-			dispatch(addBoard(newCurrentUser!));
-		} else {
-			const boardUpdates: Board = {
-				...isEdit,
-				title: inputState.title.trim(),
-				backdrop: inputState.image,
-			};
-			if (currentUser) {
-				const currentUserUpdates: User = {
-					...currentUser,
-					boards: currentUser?.boards.map((board) =>
-						board.id === isEdit.id ? boardUpdates : board
-					),
-				};
-				dispatch(addBoard(currentUserUpdates));
-			}
-		}
-		handleClose();
-	};
+
 	return (
 		<div className="fixed inset-0 flex justify-center items-center z-[9999]">
 			{/* Overlay */}
@@ -229,7 +181,14 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 						Close
 					</button>
 					<button
-						onClick={onSubmit}
+						onClick={() =>
+							onAdd({
+								title: inputState.title,
+								backdrop: inputState.image
+									? inputState.image
+									: imageRow[0].image,
+							})
+						}
 						className="px-2 py-1 border text-[16px] border-[#0D6EFD] rounded-md text-[#0D6EFD]"
 					>
 						{isEdit ? "Save" : "Create"}

@@ -9,6 +9,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "../store/store";
 import { useEffect, useState } from "react";
 import type { Board, User } from "../utils/type";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import { getDateNow } from "../utils/getDateNow";
 
 export const Dashboard = () => {
 	const { currentUserId, users } = useSelector(
@@ -47,9 +49,50 @@ export const Dashboard = () => {
 				...currentUser,
 				boards: currentUser.boards.filter((b) => b.id !== isDelete),
 			};
+			toast.success("Xóa board thành công");
 			dispatch(addBoard(updatedUser));
 		}
 		handleCloseModalDelete();
+	};
+
+	const onAdd = (data: { title: string; backdrop: string }): void => {
+		if (!data.title.trim()) {
+			toast.error("Tiêu đề không được để trống");
+			return;
+		}
+		if (!currentUser) return;
+		if (!isEdit) {
+			const board: Board = {
+				id: Math.floor(Math.random() * 1000000).toString(),
+				title: data.title.trim(),
+				backdrop: data.backdrop,
+				list: [],
+				created_at: getDateNow() as string,
+				type: "normal",
+				description: "",
+			};
+			const updates: User = {
+				...currentUser,
+				boards: [...currentUser.boards, board],
+			};
+			toast.success("Thêm board thành công");
+			dispatch(addBoard(updates));
+		} else {
+			const boardUpdates: Board = {
+				...isEdit,
+				title: data.title.trim(),
+				backdrop: data.backdrop,
+			};
+			const updates: User = {
+				...currentUser,
+				boards: currentUser.boards.map((board) =>
+					board.id === isEdit.id ? boardUpdates : board
+				),
+			};
+			toast.success("Sửa board thành công");
+			dispatch(addBoard(updates));
+		}
+		handleCloseModalAdd();
 	};
 
 	const handleLogout = () => {
@@ -60,7 +103,11 @@ export const Dashboard = () => {
 	return (
 		<div className="relative h-screen w-screen bg-gray-100 flex flex-col">
 			{openModalAdd && (
-				<ModalAddEditBoard handleClose={handleCloseModalAdd} isEdit={isEdit} />
+				<ModalAddEditBoard
+					onAdd={onAdd}
+					handleClose={handleCloseModalAdd}
+					isEdit={isEdit}
+				/>
 			)}
 			{isDelete && (
 				<ModalDelete handleClose={handleCloseModalDelete} onDelete={onDelete} />
@@ -84,6 +131,19 @@ export const Dashboard = () => {
 					}}
 				></Outlet>
 			</div>
+			<ToastContainer
+				position="top-left"
+				autoClose={1200}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="colored"
+				transition={Bounce}
+			/>
 		</div>
 	);
 };
