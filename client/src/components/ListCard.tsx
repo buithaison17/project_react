@@ -13,7 +13,7 @@ import { ModalDelete } from "./ModalDelete";
 import { ModalTaskDetail } from "./ModalTaskDetail";
 import { ModalLabel } from "./ModalLabel";
 import { ModalCreateLabel } from "./ModalCreateLabel";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { ModalDateTask } from "./ModalDateTask";
 
 interface PropsType {
@@ -413,19 +413,6 @@ export const ListCard = ({ list }: PropsType) => {
 					task={addDate.task}
 				></ModalDateTask>
 			)}
-			<ToastContainer
-				position="top-left"
-				autoClose={1200}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick={false}
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme="colored"
-				transition={Bounce}
-			/>
 		</div>
 	);
 };

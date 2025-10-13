@@ -7,10 +7,11 @@ import MDEditor from "@uiw/react-md-editor";
 import type { List, Task, User } from "../utils/type";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { addBoard, fetchData } from "../store/usersReducer";
 import { useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface PropsType {
 	list: List;
@@ -38,21 +39,28 @@ export const ModalTaskDetail = ({
 		dispatch(fetchData());
 	}, [dispatch]);
 	const currentUser = users.find((user) => user.id === currentUserId);
+	const [inputTitle, setInputTitle] = useState("");
 	const [inputDescription, setInputDescription] = useState("");
 	useEffect(() => {
-		if (task.description) {
+		if (task) {
+			setInputTitle(task.title);
 			setInputDescription(task.description);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	const onAddDescription = (): void => {
 		if (!currentUser) return;
+		if (!inputTitle.trim()) {
+			toast.error("Tiêu đề không được để trông");
+			return;
+		}
 		if (!inputDescription.trim()) {
 			toast.error("Mô tả không được để trống");
 			return;
 		}
 		const taskUpdates: Task = {
 			...task,
+			title: inputTitle.trim(),
 			description: inputDescription.trim(),
 		};
 		const listUpdates: List = {
@@ -97,7 +105,25 @@ export const ModalTaskDetail = ({
 				</div>
 				<div className="flex justify-between mt-4">
 					<div className="flex flex-col">
-						<div className="flex items-center gap-1">
+						<div className="flex flex-col gap-2">
+							<div className="flex items-center gap-2">
+								<EditIcon fontSize="small"></EditIcon>
+								<div className="text-[16px] text-[#172B4D] font-semibold">
+									Tiêu đề
+								</div>
+							</div>
+							<div className="px-7">
+								<input
+									type="text"
+									value={inputTitle}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+										setInputTitle(e.target.value)
+									}
+									className="w-[512px] border rounded py-1 px-3 outline-none hover:border-blue-500 focus:border-blue-500"
+								/>
+							</div>
+						</div>
+						<div className="flex items-center gap-1 mt-4">
 							<img
 								src={TaskModalDesIcon}
 								className="w-[24px] h-[24px]"
