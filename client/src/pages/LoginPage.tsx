@@ -5,6 +5,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchData, loginUser } from "../store/usersReducer";
 import type { AppDispatch, RootState } from "../store/store";
+import { validatePassword } from "../router/validate";
 
 export const LoginPage = () => {
 	const { users } = useSelector((state: RootState) => state.usersReducer);
@@ -38,6 +39,12 @@ export const LoginPage = () => {
 		}
 		if (existingUser?.password !== inputState.password) {
 			toast.error("Mật khẩu không đúng");
+			return;
+		}
+		if (!validatePassword(inputState.password.trim())) {
+			toast.error(
+				"Mật khẩu phải tối thiểu 8 ký tự và, ít nhất 1 chữ thường, chữ hoa, số và ký tự đặc biệt"
+			);
 			return;
 		}
 		dispatch(loginUser({ email, password }));

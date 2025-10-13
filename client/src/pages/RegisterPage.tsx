@@ -7,6 +7,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import type { User } from "../utils/type";
 import { getDateNow } from "../utils/getDateNow";
 import { addUser, fetchData } from "../store/usersReducer";
+import { validatePassword } from "../router/validate";
 
 export const RegisterPage = () => {
 	const { users } = useSelector((state: RootState) => state.usersReducer);
@@ -39,6 +40,12 @@ export const RegisterPage = () => {
 		}
 		if (users.some((user) => user.email === inputState.email)) {
 			toast.error("Email đã tồn tại");
+			return;
+		}
+		if (!validatePassword(inputState.password.trim())) {
+			toast.error(
+				"Mật khẩu phải tối thiểu 8 ký tự và, ít nhất 1 chữ thường, chữ hoa, số và ký tự đặc biệt"
+			);
 			return;
 		}
 		const user: User = {

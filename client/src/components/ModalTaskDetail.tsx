@@ -10,6 +10,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import { useEffect, useState } from "react";
 import { addBoard, fetchData } from "../store/usersReducer";
 import { useParams } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 interface PropsType {
 	list: List;
@@ -46,6 +47,10 @@ export const ModalTaskDetail = ({
 	}, []);
 	const onAddDescription = (): void => {
 		if (!currentUser) return;
+		if (!inputDescription.trim()) {
+			toast.error("Mô tả không được để trống");
+			return;
+		}
 		const taskUpdates: Task = {
 			...task,
 			description: inputDescription.trim(),
@@ -153,6 +158,19 @@ export const ModalTaskDetail = ({
 					</button>
 				</div>
 			</div>
+			<ToastContainer
+				position="top-left"
+				autoClose={1200}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="colored"
+				transition={Bounce}
+			/>
 		</div>
 	);
 };
