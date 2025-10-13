@@ -2,7 +2,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useEffect, useMemo, useState } from "react";
 import type { Board, User } from "../utils/type";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { getDateNow } from "../utils/getDateNow";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
@@ -152,108 +152,90 @@ export const ModalAddEditBoard = ({ handleClose, isEdit }: PropsType) => {
 		handleClose();
 	};
 	return (
-		<>
-			<ToastContainer
-				className="z-[99999]"
-				position="top-left"
-				autoClose={1200}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick={false}
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme="colored"
-				transition={Bounce}
+		<div className="fixed inset-0 flex justify-center items-center z-[9999]">
+			{/* Overlay */}
+			<div
+				onClick={handleClose}
+				className="fixed inset-0 h-screen w-screen bg-[rgba(0,0,0,0.3)]"
 			/>
-			<div className="fixed inset-0 flex justify-center items-center z-[9999]">
-				{/* Overlay */}
-				<div
-					onClick={handleClose}
-					className="fixed inset-0 h-screen w-screen bg-[rgba(0,0,0,0.3)]"
-				/>
 
-				{/* Content */}
-				<div className="relative z-[10000] py-3 bg-white rounded-md shadow-xl w-[500px]">
-					<div className="flex justify-between items-center p-3 border-b border-b-gray-300">
-						<div className="text-[20px] font-bold">
-							{isEdit ? "Edit Board" : "Create Board"}
-						</div>
-						<div onClick={handleClose} className="cursor-pointer">
-							<ClearIcon></ClearIcon>
-						</div>
+			{/* Content */}
+			<div className="relative z-[10000] py-3 bg-white rounded-md shadow-xl w-[500px]">
+				<div className="flex justify-between items-center p-3 border-b border-b-gray-300">
+					<div className="text-[20px] font-bold">
+						{isEdit ? "Edit Board" : "Create Board"}
 					</div>
-					<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
-						<div className="text-[20px] font-bold text-[#212529]">
-							Background
-						</div>
-						<div className="grid grid-cols-4 gap-1">
-							{imageRow.map((item, index) => (
-								<div
-									onClick={() => handleImage(item.image)}
-									key={index}
-									className="relative"
-								>
-									<img
-										src={item.image}
-										className="w-[108px] rounded-md h-[60px]"
-									/>
-									{item.image === inputState.image && (
-										<CheckCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" />
-									)}
-								</div>
-							))}
-						</div>
-					</div>
-					<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
-						<div className="text-[20px] text-[#212529] font-bold">Color</div>
-						<div className="grid grid-cols-6 gap-1">
-							{colorRow.map((item, index) => (
-								<div
-									onClick={() => handleColor(item.from, item.to)}
-									key={index}
-									style={{
-										backgroundImage: `linear-gradient(to bottom, ${item.from}, ${item.to})`,
-									}}
-									className={`h-[40px] rounded-md flex justify-center items-center`}
-								>
-									{item.from === inputState.color.from &&
-										item.to === inputState.color.to && (
-											<CheckCircleIcon className="text-white" />
-										)}
-								</div>
-							))}
-						</div>
-					</div>
-					<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
-						<div className="text-[18px] font-bold text-[v]">Board title</div>
-						<input
-							type="text"
-							onChange={handleTitle}
-							value={inputState.title}
-							className="py-[12px] px-3 text-[16px] text-[#212529] border rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
-						/>
-						<div className="text-[16px] font-normal text-[#212529]">
-							👋 Please provide a valid board title.
-						</div>
-					</div>
-					<div className="flex gap-3 justify-end items-center py-4 px-3">
-						<button
-							onClick={handleClose}
-							className="px-2 py-1 border text-[16px] border-[#DC3545] rounded-md text-[#DC3545]"
-						>
-							Close
-						</button>
-						<button
-							onClick={onSubmit}
-							className="px-2 py-1 border text-[16px] border-[#0D6EFD] rounded-md text-[#0D6EFD]"
-						>
-							{isEdit ? "Save" : "Create"}
-						</button>
+					<div onClick={handleClose} className="cursor-pointer">
+						<ClearIcon></ClearIcon>
 					</div>
 				</div>
+				<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
+					<div className="text-[20px] font-bold text-[#212529]">Background</div>
+					<div className="grid grid-cols-4 gap-1">
+						{imageRow.map((item, index) => (
+							<div
+								onClick={() => handleImage(item.image)}
+								key={index}
+								className="relative"
+							>
+								<img
+									src={item.image}
+									className="w-[108px] rounded-md h-[60px]"
+								/>
+								{item.image === inputState.image && (
+									<CheckCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" />
+								)}
+							</div>
+						))}
+					</div>
+				</div>
+				<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
+					<div className="text-[20px] text-[#212529] font-bold">Color</div>
+					<div className="grid grid-cols-6 gap-1">
+						{colorRow.map((item, index) => (
+							<div
+								onClick={() => handleColor(item.from, item.to)}
+								key={index}
+								style={{
+									backgroundImage: `linear-gradient(to bottom, ${item.from}, ${item.to})`,
+								}}
+								className={`h-[40px] rounded-md flex justify-center items-center`}
+							>
+								{item.from === inputState.color.from &&
+									item.to === inputState.color.to && (
+										<CheckCircleIcon className="text-white" />
+									)}
+							</div>
+						))}
+					</div>
+				</div>
+				<div className="flex flex-col gap-2 px-3 py-4 border-b border-b-gray-300">
+					<div className="text-[18px] font-bold text-[v]">Board title</div>
+					<input
+						type="text"
+						onChange={handleTitle}
+						value={inputState.title}
+						className="py-[12px] px-3 text-[16px] text-[#212529] border rounded-md hover:border-blue-500 focus:border-blue-500 focus:outline-none"
+					/>
+					<div className="text-[16px] font-normal text-[#212529]">
+						👋 Please provide a valid board title.
+					</div>
+				</div>
+				<div className="flex gap-3 justify-end items-center py-4 px-3">
+					<button
+						onClick={handleClose}
+						className="px-2 py-1 border text-[16px] border-[#DC3545] rounded-md text-[#DC3545]"
+					>
+						Close
+					</button>
+					<button
+						onClick={onSubmit}
+						className="px-2 py-1 border text-[16px] border-[#0D6EFD] rounded-md text-[#0D6EFD]"
+					>
+						{isEdit ? "Save" : "Create"}
+					</button>
+				</div>
 			</div>
-		</>
+		</div>
 	);
 };
